@@ -8,3 +8,6 @@ class Polls:
         return event_polls.objects.filter(creator__username = username).values("title", "description", "is_finalized")
 
 
+    def get_involved_polls(username):
+        return contributes.objects.filter(user__username = username).values("event_poll").\
+            values("event_poll__title", "event_poll__description", "event_poll__is_finalized")
