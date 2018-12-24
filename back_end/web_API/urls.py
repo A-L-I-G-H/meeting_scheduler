@@ -1,7 +1,6 @@
 from django.urls import path
-
-from . import views
+from web_API.views import *
 
 urlpatterns = [
-    # path('user/login/', views.login, name='login'),
+    path('polls/owner', GetCreatedPollsView.as_view()),
 ]
