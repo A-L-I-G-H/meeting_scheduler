@@ -5,7 +5,7 @@ from web_API.dataAccessLayer.Polls import *
 
 
 class GetInvolvedPollsView(View):
-    def get(self, request):
+    def post(self, request):
         request_body = parse_request(request)
         involved_polls = Polls.get_involved_polls(request_body['username'])
 

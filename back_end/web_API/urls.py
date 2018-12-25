@@ -5,5 +5,4 @@ urlpatterns = [
     path('polls/owner', GetCreatedPollsView.as_view()),
     path('polls/involved', GetInvolvedPollsView.as_view()),
     path('polls/createPoll', CreateNewPollView.as_view()),
-    path('polls/finalize/<int: poll_id>', FinalizePollView.as_view()),
 ]

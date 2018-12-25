@@ -5,7 +5,7 @@ from web_API.dataAccessLayer.Polls import *
 
 
 class GetCreatedPollsView(View):
-    def get(self, request):
+    def post(self, request):
         request_body = parse_request(request)
         user_polls = Polls.get_polls_created_by_user(request_body['username'])
 
