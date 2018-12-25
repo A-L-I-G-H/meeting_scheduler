@@ -1,3 +1,7 @@
 from django.test import TestCase
+from web_API.emailService.EmailService import *
 
-# Create your tests here.
+class AnimalTestCase(TestCase):
+
+    def test_email_sending(self):
+        send_email_to_users('test subject', 'test body', ['aligharizadeh@outlook.com'])
