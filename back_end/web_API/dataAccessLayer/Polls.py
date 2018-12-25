@@ -1,16 +1,15 @@
 from web_API.models import *
 from django.contrib.auth.models import User
 from web_API.emailService.EmailService import *
-import asyncio
 
 
 def get_polls_created_by_user(username):
-    return event_polls.objects.filter(creator__username = username).values("title", "description", "is_finalized")
+    return event_polls.objects.filter(creator__username = username).values("id", "title", "description", "is_finalized")
 
 
 def get_involved_polls(username):
     return contributes.objects.filter(user__username = username).values("event_poll").\
-        values("event_poll__title", "event_poll__description", "event_poll__is_finalized")
+        values("id", "event_poll__title", "event_poll__description", "event_poll__is_finalized")
 
 
 def create_poll(request_body):
@@ -51,3 +50,11 @@ def get_contributors_emails(event_poll):
         email_list.append(email['user__email'])
 
     return email_list
+
+def vote(request_body):
+    user = User.objects.filter(username = request_body['username'])[0]
+    event_poll = event_polls.objects.filter(id = request_body['event-id'])[0]
+    option = options.objects.filter(label= request_body['vote'], event_poll= event_poll)[0]
+    vote = votes(user= user, option= option)
+    vote.save()
+
