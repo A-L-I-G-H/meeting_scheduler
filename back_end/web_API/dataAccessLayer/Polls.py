@@ -1,6 +1,7 @@
 from web_API.models import *
 from django.contrib.auth.models import User
 from web_API.emailService.EmailService import *
+import asyncio
 
 
 def get_polls_created_by_user(username):
@@ -29,10 +30,8 @@ def create_poll(request_body):
         new_contributes.save()
         email_list.append(contrib.email)
 
-    send_creation_notifications(email_list)
+    send_email_to_users('new', 'new', email_list)
 
-def send_creation_notifications(email_list):
-    send_mail_to_users('new', 'new', email_list)
 
 
 
@@ -42,7 +41,7 @@ def finalize_poll(request_body):
     event_poll.save()
 
     email_list = get_contributors_emails(event_poll)
-    send_mail_to_users('fin', 'fin', email_list)
+    send_email_to_users('fin', 'fin', email_list)
 
 
 def get_contributors_emails(event_poll):
