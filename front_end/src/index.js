@@ -5,6 +5,7 @@ import Poll from './domain/Poll';
 import Api from './api/index';
 import {BrowserRouter, Switch, Route} from 'react-router-dom';
 import {Button, Icon} from 'react-materialize';
+import M from 'materialize-css';
 
 const ColorTheme = {
     primaryColor: '#2196F3',
@@ -12,6 +13,14 @@ const ColorTheme = {
 };
 
 class App extends React.Component {
+    constructor(props) {
+        super(props);
+
+        // document.addEventListener('DOMContentLoaded', function() {
+        //     let elems = document.querySelectorAll('.tooltipped');
+        //     M.Tooltip.init(elems, {});
+        // });
+    }
     render() {
         return (
             <Switch>
@@ -37,22 +46,32 @@ class HomePage extends React.Component {
     render() {
         console.log("passing things in : ");
         console.log(this.props);
-        return (
+        const result = (
             <Layout>
                 <div className="container">
 
                 <PollSection title="Your Polls" polls={Api.getMyPolls()}/>
                 <PollSection title="Involved Polls" polls={Api.getInvolvedPolls()}/>
 
+                <span >
                 <AddButton
                     onClick={() => setTimeout(() => this.props.history.push('/createPoll'), 400)}
                     color={ColorTheme.secondaryColor}
                     style={{position: 'fixed', bottom: 30, right: 30}}
+                    className="pollCreationButton"
                 />
+                </span>
 
             </div>
             </Layout>
         );
+
+        return result;
+    }
+
+    componentDidMount() {
+        const elem = document.getElementById("pollCreationButton");
+        M.Tooltip.init(elem, {enterDelay: 500});
     }
 }
 
@@ -110,11 +129,17 @@ function AddButton(props) {
         backgroundColor: props.color,
     }, ...props.style};
 
-    return (
-        <div style={style} onClick={props.onClick} className="btn-floating btn-large waves-effect waves-light">
+    const result = (
+        <div
+            style={style} onClick={props.onClick}
+            className={"btn-floating btn-large waves-effect waves-light" + props.className}
+            id="pollCreationButton" data-position="top" data-tooltip="create new poll"
+        >
             <i className="material-icons">add</i>
         </div>
     );
+
+    return result;
 }
 
 
