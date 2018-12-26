@@ -14,7 +14,7 @@ const involvedPolls = [
 const loggedInUser = {username: "ahmad"};
 
 class Api {
-    prefix = "";
+    prefix = "http://localhost:8000";
 
     createPoll(poll) {
         console.log("sending request to /createPoll with : ");

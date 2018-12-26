@@ -5,7 +5,6 @@ import Poll from './domain/Poll';
 import Api from './api/index';
 import {BrowserRouter, Switch, Route} from 'react-router-dom';
 
-
 const primaryColor = '#2196F3';
 const secondaryColor = "#FF9800";
 
@@ -18,66 +17,6 @@ class App extends React.Component {
             </Switch>
         );
     }
-}
-
-class CreateEventPollPage extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            title: "",
-            description: "",
-            participants: [],
-            options: [],
-        };
-
-        this.setParticipants = this.setParticipants.bind(this);
-        this.setOptions = this.setOptions.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
-
-    render() {
-        return (
-            <form onSubmit={this.handleSubmit} style={{margin: "30px"}}>
-
-                title: &nbsp;
-                <input type="text" name="title" onChange={(event) => {this.setState({title: event.target.value})}}/> <br/><br/>
-
-                description: &nbsp;<br/>
-                <textarea type="textarea" rows="5" cols="40" name="description" onChange={(event) => {this.setState({description: event.target.value})}}/> <br/><br/>
-
-                participants: &nbsp;
-                <input type="text" name="participants" onChange={this.setParticipants}/> <br/><br/>
-
-                options: &nbsp;
-                <input type="text" name="options" onChange={this.setOptions}/> <br/> <br/>
-
-                <button onClick={this.handleSubmit}>asdasd</button>
-
-            </form>
-        )
-    }
-
-    setParticipants(event) {
-        this.setState({participants: event.target.value.split(",").map(elem => elem.trim())});
-    }
-
-    setOptions(event) {
-        this.setState({options: event.target.value.split(",").map(elem => elem.trim())});
-    }
-
-    handleSubmit(event) {
-        console.log("create poll called");
-        // Api.createPoll(Object.assign({}, this.state));
-    }
-
-    // {
-    //     "username": "ali",
-    //     "title": "new poll",
-    //     "description": "new description",
-    //     "options": ["option1", "option2"],
-    //     "contributors": ["ali", "mhmb76"]
-    // }
-
 }
 
 
@@ -188,6 +127,7 @@ class PollButton extends React.Component {
     }
 
 }
+
 
 ReactDOM.render((
     <BrowserRouter>
