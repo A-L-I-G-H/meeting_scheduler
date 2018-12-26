@@ -52,10 +52,10 @@ class HomePage extends React.Component {
                 <Poll data={Api.getInvolvedPolls()[2]}/>
 
                 <AddButton
-                    history={this.props.history}
-                    diameter={55}
-                    onClick={() => this.history.push('/createPoll')}
-                    color={ColorTheme.primaryColor}
+                    diameter="55px"
+                    onClick={() => this.props.history.push('/createPoll')}
+                    color={ColorTheme.secondaryColor}
+                    style={{position: 'fixed', bottom: 30, right: 30}}
                 />
 
             </div>
@@ -103,20 +103,22 @@ function PollSection(props) {
 }
 
 function AddButton(props) {
+    const style = {...{
+        display: 'inline-block',
+        fontSize: "22px",
+        backgroundColor: props.color,
+        color: 'white',
+        height: props.diameter,
+        width: props.diameter,
+        borderRadius: '50%',
+        padding: '2px',
+        textAlign: 'center',
+        lineHeight: props.diameter,
+        cursor: 'pointer',
+    }, ...props.style};
+
     return (
-        <div style={{
-            display: 'inline-block', fontSize: "22px",
-            backgroundColor: props.color, color: 'white',
-            height: props.diameter, width: props.diameter,
-            borderRadius: '50%', padding: '2px',
-            textAlign: 'center',
-            lineHeight: props.diameter,
-            position: 'fixed',
-            bottom: 30, right: 30,
-            cursor: 'pointer',
-        }}
-             onClick={props.onClick}
-        >
+        <div style={style} onClick={props.onClick}>
             +
         </div>
     );
