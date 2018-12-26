@@ -5,15 +5,19 @@ import Poll from './domain/Poll';
 import Api from './api/index';
 import {BrowserRouter, Switch, Route} from 'react-router-dom';
 
-const primaryColor = '#2196F3';
-const secondaryColor = "#FF9800";
+const ColorTheme = {
+    primaryColor: '#2196F3',
+    secondaryColor: "#FF9800",
+};
+
+
 
 class App extends React.Component {
     render() {
         return (
             <Switch>
             <Route exact path='/' component={HomePage}/>
-            <Route path='/createPoll' component={CreateEventPollPage}/>
+            {/*<Route path='/createPoll' component={CreateEventPollPage}/>*/}
             </Switch>
         );
     }
@@ -47,7 +51,12 @@ class HomePage extends React.Component {
                 <Poll data={Api.getInvolvedPolls()[1]}/>
                 <Poll data={Api.getInvolvedPolls()[2]}/>
 
-                <PollButton history={this.props.history}/>
+                <AddButton
+                    history={this.props.history}
+                    diameter={55}
+                    onClick={() => this.history.push('/createPoll')}
+                    color={ColorTheme.primaryColor}
+                />
 
             </div>
             </Layout>
@@ -66,7 +75,7 @@ class NavBar extends React.Component {
             padding: '20px',
             paddingRight: '50px',
             display: 'block',
-            backgroundColor: primaryColor,
+            backgroundColor: ColorTheme.primaryColor,
         };
 
         return  (
@@ -87,45 +96,30 @@ function PollSection(props) {
         <div>
         <div style={{display: 'inline-block', marginRight: "20px"}}>
             <h2 style={{fontSize: '20px'}}>{props.text}</h2>
-            <hr style={{color: primaryColor}}/>
+            <hr style={{color: ColorTheme.primaryColor}}/>
         </div>
         </div>
     );
 }
 
-
-class PollButton extends React.Component {
-    constructor(props) {
-        super(props);
-        this.handleClick = this.handleClick.bind(this);
-    }
-
-
-    render() {
-        const diameter = '55px';
-        return (
-            <div style={{
-                display: 'inline-block', fontSize: "22px",
-                backgroundColor: secondaryColor, color: 'white',
-                height: diameter, width: diameter,
-                borderRadius: '50%', padding: '2px',
-                textAlign: 'center',
-                lineHeight: diameter,
-                position: 'fixed',
-                bottom: 30, right: 30,
-                cursor: 'pointer',
-            }}
-                 onClick={this.handleClick}
-            >
-                +
-            </div>
-        );
-    }
-
-    handleClick() {
-        this.props.history.push('/createPoll');
-    }
-
+function AddButton(props) {
+    return (
+        <div style={{
+            display: 'inline-block', fontSize: "22px",
+            backgroundColor: props.color, color: 'white',
+            height: props.diameter, width: props.diameter,
+            borderRadius: '50%', padding: '2px',
+            textAlign: 'center',
+            lineHeight: props.diameter,
+            position: 'fixed',
+            bottom: 30, right: 30,
+            cursor: 'pointer',
+        }}
+             onClick={props.onClick}
+        >
+            +
+        </div>
+    );
 }
 
 
