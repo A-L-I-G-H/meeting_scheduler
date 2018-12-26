@@ -9,17 +9,18 @@ class Poll extends React.Component {
 
     render() {
         return (
-            <p>
-                <span style={{fontWeight: "bold"}}>{this.props.data.title}</span> &nbsp;
-                <span>{this.props.data.description}</span> &nbsp;
-                <span style={{fontWeight: "bold"}}>{this.props.data.isFinalized ? "finalized" : <span style={{textDecoration: 'underline', cursor: 'pointer'}} onClick={this.finalize}>finalize</span>} </span>
-            </p>
+            <div className="card" style={{margin: "20px"}}>
+                <div class="card-content">
+                    <span style={{fontWeight: "bold"}}>{this.props.title}</span> &nbsp;
+                    <span>{this.props.description}</span> &nbsp;
+                    <span style={{fontWeight: "bold"}}>{this.props.isFinalized ? "finalized" : ""} </span>
+                </div>
+            </div>
         );
     }
 
     finalize() {
         console.log("finalize");
-        Api.finalize(this.props.data);
     }
 
 

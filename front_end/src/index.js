@@ -39,16 +39,10 @@ class HomePage extends React.Component {
         console.log(this.props);
         return (
             <Layout>
-                <div style={{marginTop: '60px', marginLeft: '20px'}}>
-                <PollSection text="Your Polls"/>
-                <Poll data={Api.getMyPolls()[0]}/>
-                <Poll data={Api.getMyPolls()[1]}/>
+                <div className="container">
 
-                <PollSection text="Involved Polls"/>
-                <Poll data={Api.getInvolvedPolls()[0]}/>
-                <Poll data={Api.getInvolvedPolls()[1]}/>
-                <Poll data={Api.getInvolvedPolls()[2]}/>
-
+                <PollSection title="Your Polls" polls={Api.getMyPolls()}/>
+                <PollSection title="Involved Polls" polls={Api.getInvolvedPolls()}/>
 
                 <AddButton
                     onClick={() => setTimeout(() => this.props.history.push('/createPoll'), 400)}
@@ -59,6 +53,27 @@ class HomePage extends React.Component {
             </div>
             </Layout>
         );
+    }
+}
+
+class PollSection extends React.Component {
+    render() {
+        return (
+            <div className="container">
+
+            <div className="row" style={{display: 'inline-block', marginRight: "20px"}}>
+                <h2 style={{fontSize: '20px'}}>{this.props.title}</h2>
+                <hr style={{color: ColorTheme.primaryColor}}/>
+            </div>
+
+            {this.props.polls.map(poll => (
+                <div className="row" style={{marginBottom: "-15px"}}>
+                    <Poll {...poll}/>
+                </div>
+            ))}
+
+            </div>
+        )
     }
 }
 
@@ -89,16 +104,6 @@ class NavBar extends React.Component {
     }
 }
 
-function PollSection(props) {
-    return (
-        <div>
-        <div style={{display: 'inline-block', marginRight: "20px"}}>
-            <h2 style={{fontSize: '20px'}}>{props.text}</h2>
-            <hr style={{color: ColorTheme.primaryColor}}/>
-        </div>
-        </div>
-    );
-}
 
 function AddButton(props) {
     const style = {...{
