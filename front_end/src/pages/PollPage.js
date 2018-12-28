@@ -17,7 +17,7 @@ class PollPage extends React.Component {
 
     render() {
         console.log("my poll is:");
-        console.log(this.state.poll)
+        console.log(this.state.poll);
         if (this.state.poll) {
             return (
                 <ChronusPage history={this.props.history}>
@@ -29,7 +29,7 @@ class PollPage extends React.Component {
                             <div style={{marginTop: '40px'}}>
                                 <span style={{color: 'grey', marginRight: '30px'}}>options:</span>
                                 {
-                                    this.state.poll.options.map((option, i) => <span style={{color: 'white', backgroundColor: ColorTheme.primaryColor, borderRadius: '7px', padding: '7px', marginRight: '10px'}} key={i}>{option}</span>)
+                                    this.state.poll.options.map(option => <span style={{color: 'white', backgroundColor: ColorTheme.primaryColor, borderRadius: '7px', padding: '7px', marginRight: '10px'}} key={option.id}>{option.label}</span>)
                                 }
                                 <br/>
                             </div>
@@ -45,27 +45,20 @@ class PollPage extends React.Component {
                                 }
                             </div>
 
-                            <div style={{marginTop: '35px', fontWeight: 'bold', color: ColorTheme.secondaryColor}}>
+                            <div style={{marginTop: '35px', fontWeight: 'bold', color: ColorTheme.accentColor}}>
                                 {
                                     this.state.poll.isFinalized ?
                                         <span>FINALIZED</span> :
                                         <a className="waves-effect waves-light btn modal-trigger" href="#finalizeModal"
-                                           style={{backgroundColor: ColorTheme.secondaryColor, color: 'white'}}>
+                                           style={{backgroundColor: ColorTheme.accentColor, color: 'white'}}>
                                             FINALIZE
                                         </a>
                                 }
 
-                                <div id="finalizeModal" className="modal">
-                                    <div className="modal-content">
-                                        <h4 style={{color: 'black'}}>Choose the final result of the poll</h4>
-                                        <span style={{color: 'grey', marginRight: '30px'}}>options:</span>
-                                        {
-                                            this.state.poll.options.map((option, i) => <span style={{color: 'white', backgroundColor: ColorTheme.primaryColor, borderRadius: '7px', padding: '7px', marginRight: '10px'}} key={i}>{option}</span>)
-                                        }
-                                    </div>
-                                </div>
-
                             </div>
+
+                            <FinalizationModal options={this.state.poll.options}/>
+
                         </div>
                     </div>
 
@@ -86,5 +79,48 @@ class PollPage extends React.Component {
     }
 
 }
+
+class FinalizationModal extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {selected: {id: -1}}
+    }
+
+    render() {
+        return (
+            <div id="finalizeModal" className="modal">
+                <div className="modal-content" style={{height: '400px'}}>
+                    <h4 style={{color: 'black'}}>Choose the final result of the poll</h4>
+                    <div style={{marginTop: '100px'}}>
+                        {
+                            this.props.options.map(option =>
+                                <span
+                                    style={{
+                                        color: 'white',
+                                        backgroundColor: this.state.selected.id === option.id ? ColorTheme.primaryColor: ColorTheme.passiveElement,
+                                        borderRadius: '7px',
+                                        padding: '7px', marginRight: '10px',
+                                        cursor: 'pointer',
+                                    }}
+                                    key={option.id}
+                                    onClick={() => this.setState({selected: option})}
+                                >
+                                    {option.label}
+                                </span>
+                            )
+                        }
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    handleClickOnOption() {
+
+        // this.setState({selected: option})
+    }
+}
+
+
 
 export default PollPage;
