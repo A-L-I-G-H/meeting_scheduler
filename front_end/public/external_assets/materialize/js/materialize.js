@@ -4775,7 +4775,7 @@ $jscomp.polyfill = function (e, r, p, m) {
   * Waves v0.6.4
   * http://fian.my.id/Waves
   *
-  * Copyright 2014 Alfiana E. Sibuea and other contributors
+  * Copyright 2014 Alfiana E. Sibuea and other participants
   * Released under the MIT license
   * https://github.com/fians/Waves/blob/master/LICENSE
   */
