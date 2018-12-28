@@ -27,17 +27,13 @@ class App extends React.Component {
             </Switch>
         );
     }
-
 }
-
 
 class CreatePollPage extends React.Component {
     constructor(props) {
         super(props);
     }
 }
-
-
 
 
 class HomePage extends React.Component {
@@ -54,7 +50,7 @@ class HomePage extends React.Component {
 
                     <AddButton
                         onClick={() => setTimeout(() => this.props.history.push('/createPoll'), 400)}
-                        color={ColorTheme.secondaryColor}
+                        color={ColorTheme.accentColor}
                         style={{position: 'fixed', bottom: 30, right: 30}}
                         className="pollCreationButton"
                     />
@@ -91,7 +87,6 @@ class PollSection extends React.Component {
         )
     }
 }
-
 
 function AddButton(props) {
     const style = {...{

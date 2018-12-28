@@ -52,9 +52,11 @@ let poll4 = {
     contributors: ["ahmad", "gholi", "ghamar"]
 };
 
-const myPolls = [poll1, poll2];
+let myPolls = [poll1, poll2];
 
-const involvedPolls = [ poll1, poll3, poll4];
+let involvedPolls = [poll1, poll3, poll4];
+
+let allPolls = [poll1, poll2, poll3, poll4];
 
 
 class Api {
@@ -84,7 +86,16 @@ class Api {
     }
 
     finalize(poll) {
-        fetch(this.prefix + "/finalize", {method: 'POST', body: {id: poll.id}});
+        // let response = fetch(this.prefix + "/finalize/", {method: 'PUT', body: {id: poll.id}});
+        
+        //temporary:
+        let targetpoll = allPolls.find(searchedPoll => searchedPoll.id === poll.id);
+        targetpoll.isFinalized = true;
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve(true);
+            }, 500)
+        });
     }
 
 }
