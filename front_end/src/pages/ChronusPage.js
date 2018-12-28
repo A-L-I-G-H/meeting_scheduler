@@ -57,7 +57,7 @@ class NavBar extends React.Component {
                 </span>
 
                 </nav>
-                <div style={{marginTop: height - 20}}>_</div>
+                <div style={{marginTop: height - 20}}>""</div>
             </div>
         )
     }
