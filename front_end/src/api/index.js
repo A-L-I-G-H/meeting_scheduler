@@ -1,27 +1,60 @@
 const fetch = require('node-fetch');
 
-const myPolls = [
-    {
-        id: 1, title: "AP delivery", description: "final assignment for AP. which time is better for you?", owner: "ahmad",
-        options:["tuesday 8:00", "wednesday 5:00"], isFinalized: false, participants: ["ahmad", "zahra", "ali", "gholi"]
-    },
-    {
-        id: 2, title: "DM delivery", description: "implementation of dijkstra", owner: "ahmad",
-        options: ["tomorrow", "today"], isFinalized: true, participants: ["kasra", "ghamar", "zahra"]
-    },
-];
+let poll1 = {
+    id: 1,
+    title: "AP delivery",
+    description: "final assignment for AP. which time is better for you?",
+    owner: "ahmad",
+    options:[
+        {id: 1, label: "tuesday 8:00", datetime: null},
+        {id: 2, label: "wednesday 5:00", datetime: null},
+    ],
+    isFinalized: false,
+    participants: ["ahmad", "zahra", "ali", "gholi"]
+};
 
-const involvedPolls = [
-    {
-        id: 3, title: "weeklyCommittee", description: "weekly session for ...", owner: "ghasem",
-        options: ["Saturdays", "Sundays"], isFinalized: false, contributors: ["ali", "zahra", "ahmad"]
-    },
-    {
-        id: 4, title: "itST delivery", description: "syntax based testing", owner: "borna",
-        options: ["Friday after the ICPC contest", "Thursday"], isFinalized: true, contributors: ["ahmad", "gholi", "ghamar"]
-    },
-    // {id: 5, title: "ACM monthly meeting", description: "for reviewing the schedule of the up-coming ...", owner: "ghazal", options:["today", "tomorrow"], isFinalized: false},
-];
+let poll2 = {
+    id: 2,
+    title: "DM delivery",
+    description: "implementation of dijkstra",
+    owner: "ahmad",
+    options: [
+        {id: 1, label: "tomorrow", datetime: null},
+        {id: 2, label: "today", datetime: null},
+    ],
+    isFinalized: true,
+    participants: ["kasra", "ghamar", "zahra"]
+};
+
+let poll3 = {
+    id: 3,
+    title: "weeklyCommittee",
+    description: "weekly session for ...",
+    owner: "ghasem",
+    options: [
+        {id: 1, label: "Saturdays", datetime: null},
+        {id: 2, label: "Sundays", datetime: null},
+    ],
+    isFinalized: false,
+    contributors: ["ali", "zahra", "ahmad"]
+};
+
+let poll4 = {
+    id: 4,
+    title: "itST delivery",
+    description: "syntax based testing",
+    owner: "borna",
+    options: [
+        {id: 1, label: "Friday after the ICPC contest", datetime: null},
+        {id: 2, label: "Thursday", datetime: null},
+    ],
+    isFinalized: true,
+    contributors: ["ahmad", "gholi", "ghamar"]
+};
+
+const myPolls = [poll1, poll2];
+
+const involvedPolls = [ poll1, poll3, poll4];
 
 
 class Api {
