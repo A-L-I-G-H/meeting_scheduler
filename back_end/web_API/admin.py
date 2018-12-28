@@ -1,7 +1,10 @@
 from django.contrib import admin
-from .models import *
+from web_API.models.Votes import *
+from web_API.models.EventPolls import *
+from web_API.models.Options import *
+from web_API.models.Contributes import *
 
-admin.site.register(votes)
-admin.site.register(event_polls)
-admin.site.register(options)
-admin.site.register(contributes)
+admin.site.register(Contributes)
+admin.site.register(Votes)
+admin.site.register(EventPolls)
+admin.site.register(Options)
