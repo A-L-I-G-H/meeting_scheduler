@@ -3,6 +3,7 @@ import API from "../api";
 import React from "react";
 import {ColorTheme, HistoryContext} from "../globals";
 import ChronusPage from './ChronusPage';
+import StorageManager from "../StorageManager";
 
 class PollPage extends React.Component {
     constructor(props) {
@@ -53,19 +54,7 @@ class PollPage extends React.Component {
                                 }
                             </div>
 
-                            <div style={{marginTop: '35px', fontWeight: 'bold', color: ColorTheme.accentColor}}>
-                                {
-                                    this.state.poll.isFinalized ?
-                                        <span>FINALIZED</span> :
-                                        <a className="waves-effect waves-light btn modal-trigger" href="#finalizeModal"
-                                           style={{backgroundColor: ColorTheme.accentColor, color: 'white'}}>
-                                            FINALIZE
-                                        </a>
-
-                                }
-
-                            </div>
-
+                            <FinalizationSection poll={this.state.poll}/>
                             <FinalizationModal poll={this.state.poll}/>
 
                         </div>
@@ -93,6 +82,42 @@ class PollPage extends React.Component {
         let elems = Array.from(document.getElementsByClassName('modal'));
         elems.forEach(elem => M.Modal.init(elem, {}));
     }
+}
+
+function FinalizationSection(props) {
+    let content = null;
+    if (props.poll.isFinalized) {
+        content = <span style={{color: ColorTheme.accentColor}}>FINALIZED</span>;
+    } else if (StorageManager.getLoggedInUser().username === props.poll.owner) {
+        content =
+            (<a className="waves-effect waves-light btn modal-trigger" href="#finalizeModal"
+                style={{backgroundColor: ColorTheme.accentColor, color: 'white'}}>
+                FINALIZE
+            </a>)
+    } else {
+        content = <div style={{display:'none'}}></div>
+    }
+    return (
+        <div style={{marginTop: '35px', fontWeight: 'bold'}}>
+            {content}
+        </div>
+    )
+
+    //
+    // if (StorageManager.getLoggedInUser().username === props.poll.owner) {
+    //     return <div style={{display: 'none'}}>_</div>;
+    // } else {
+    //     return (
+    //         <div style={{marginTop: '35px', fontWeight: 'bold', color: ColorTheme.accentColor}}>
+    //             {
+    //                 props.poll.isFinalized ?
+    //                     <span>FINALIZED</span> :
+    //
+    //
+    //             }
+    //         </div>
+    //     );
+    // }
 }
 
 
