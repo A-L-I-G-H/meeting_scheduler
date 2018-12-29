@@ -49,7 +49,7 @@ class PollPage extends React.Component {
                                 <span style={{color: 'grey', marginRight: '20px'}}>participants: </span>
                                 {
                                     this.state.poll.participants.map((participant, i) => <span
-                                        style={{marginRight: '10px'}} key={i}>{participant}</span>)
+                                        style={{marginRight: '10px'}} key={i}>{participant.username}</span>)
                                 }
                             </div>
 
@@ -161,6 +161,7 @@ class FinalizationModal extends React.Component {
         console.log("handleClickOnFinal called");
         if (this.state.selected === null) {
             this.setState({finalizationResult: {success: false, message: "you must choose an option first"}});
+            return;
         }
 
         let success = await API.finalize(this.props.poll);
