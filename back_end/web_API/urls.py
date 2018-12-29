@@ -2,6 +2,7 @@ from django.urls import path
 from web_API.views import *
 
 urlpatterns = [
+    path('polls/', GetPollView.as_view()),
     path('polls/owner', GetCreatedPollsView.as_view()),
     path('polls/involved', GetInvolvedPollsView.as_view()),
     path('polls/createPoll', CreateNewPollView.as_view()),

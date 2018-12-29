@@ -11,6 +11,13 @@ class EventPolls(models.Model):
     title = models.CharField(max_length = 50)
     description = models.CharField(max_length = 250)
 
+
+
+    @staticmethod
+    def get_poll(id):
+        return EventPolls.objects.filter(id= id).values("id", "title", "description", "is_finalized")
+
+
     @staticmethod
     def get_created_polls(username):
         return EventPolls.objects.filter(creator__username = username).values("id", "title", "description",
@@ -20,6 +27,7 @@ class EventPolls(models.Model):
     def get_involved_polls(username):
         return Contributes.objects.filter(user__username=username).values("event_poll"). \
             values("id", "event_poll__title", "event_poll__description", "event_poll__is_finalized")
+
 
     @staticmethod
     def create_poll(request_body):
@@ -52,14 +60,15 @@ class EventPolls(models.Model):
         send_email_to_users('fin', 'fin', email_list)
 
 
-    @staticmethod
     def get_contributors_emails(poll):
-        email_query_set = Contributes.objects.filter(event_poll= poll).values("user").values("user__email")
+        email_query_set = Contributes.objects.filter(event_poll=poll).values("user").values("user__email")
         email_list = []
         for email in email_query_set:
             email_list.append(email['user__email'])
 
         return email_list
+
+
 
     class Meta:
         db_table = 'EventPolls'
