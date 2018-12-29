@@ -84,10 +84,25 @@ class PollPage extends React.Component {
     }
 }
 
+
+
 function FinalizationSection(props) {
     let content = null;
+    let marginTop = '35px';
+    const finalizedOption = props.poll.options.find(option => option.id === props.poll.finalizedOptionId);
     if (props.poll.isFinalized) {
-        content = <span style={{color: ColorTheme.accentColor}}>FINALIZED</span>;
+        content = (
+            <div>
+                <span style={{color: ColorTheme.accentColor, marginRight: '10px'}}>FINALIZED:</span>
+                <span style={{
+                    color: 'white',
+                    backgroundColor: ColorTheme.accentColor,
+                    borderRadius: '7px',
+                    padding: '7px',
+                    marginRight: '10px'
+                }}>{finalizedOption.label}</span>
+            </div>
+        );
     } else if (StorageManager.getLoggedInUser().username === props.poll.owner) {
         content =
             (<a className="waves-effect waves-light btn modal-trigger" href="#finalizeModal"
@@ -96,28 +111,13 @@ function FinalizationSection(props) {
             </a>)
     } else {
         content = <div style={{display:'none'}}></div>
+        marginTop = '0px';
     }
     return (
-        <div style={{marginTop: '35px', fontWeight: 'bold'}}>
+        <div style={{marginTop: marginTop, fontWeight: 'bold'}}>
             {content}
         </div>
     )
-
-    //
-    // if (StorageManager.getLoggedInUser().username === props.poll.owner) {
-    //     return <div style={{display: 'none'}}>_</div>;
-    // } else {
-    //     return (
-    //         <div style={{marginTop: '35px', fontWeight: 'bold', color: ColorTheme.accentColor}}>
-    //             {
-    //                 props.poll.isFinalized ?
-    //                     <span>FINALIZED</span> :
-    //
-    //
-    //             }
-    //         </div>
-    //     );
-    // }
 }
 
 
@@ -189,7 +189,7 @@ class FinalizationModal extends React.Component {
             return;
         }
 
-        let success = await API.finalize(this.props.poll);
+        let success = await API.finalize(this.props.poll, this.state.selected.id);
         if (success) {
             this.setState({finalizationResult: {success: true, message: "poll finalized successfully."}});
             console.log("pushing at router");

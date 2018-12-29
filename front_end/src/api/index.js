@@ -23,12 +23,13 @@ let poll2 = {
     id: 2,
     title: "DM delivery",
     description: "implementation of dijkstra",
-    owner: "ahmad",
+    owner: "kasra",
     options: [
         {id: 1, label: "tomorrow", datetime: null},
         {id: 2, label: "today", datetime: null},
     ],
     isFinalized: true,
+    finalizedOptionId: 2,
     participants: [
         {username: "kasra", voted: true, votes: [{optionId: 1, voteType: VoteType.YesIfNecessary}, {optionId: 2, voteType: VoteType.No}]},
     ],
@@ -56,13 +57,13 @@ let poll4 = {
         {id: 1, label: "Friday after the ICPC contest", datetime: null},
         {id: 2, label: "Thursday", datetime: null},
     ],
-    isFinalized: true,
+    isFinalized: false,
     participants: [],
 };
 
 let myPolls = [poll1, poll2];
 
-let involvedPolls = [poll1, poll3, poll4];
+let involvedPolls = [poll3, poll1, poll4];
 
 let allPolls = [poll1, poll2, poll3, poll4];
 
@@ -93,12 +94,13 @@ class Api {
         });
     }
 
-    finalize(poll) {
+    finalize(poll, optionId) {
         // let response = fetch(this.prefix + "/finalize/", {method: 'PUT', body: {id: poll.id}});
 
         //temporary:
         let targetpoll = allPolls.find(searchedPoll => searchedPoll.id === poll.id);
         targetpoll.isFinalized = true;
+        targetpoll.finalizedOptionId = optionId;
         return new Promise((resolve, reject) => {
             setTimeout(() => {
                 resolve(true);
