@@ -1,5 +1,7 @@
 const fetch = require('node-fetch');
 
+const VoteType = {No: 0, Yes: 1, YesIfNecessary: 2};
+
 let poll1 = {
     id: 1,
     title: "AP delivery",
@@ -8,9 +10,13 @@ let poll1 = {
     options:[
         {id: 1, label: "tuesday 8:00", datetime: null},
         {id: 2, label: "wednesday 5:00", datetime: null},
+        {id: 3, label: "friday 10:00", datetime: null},
     ],
     isFinalized: false,
-    participants: ["ahmad", "zahra", "ali", "gholi"]
+    participants: [
+        {username: "ahmad", voted: false},
+        {username: "zahra", voted: true, votes: [{optionId: 1, voteType: VoteType.No}, {optionId: 2, voteType: VoteType.Yes}, {optionId: 3, voteType: VoteType.YesIfNecessary}]}
+    ],
 };
 
 let poll2 = {
@@ -23,7 +29,9 @@ let poll2 = {
         {id: 2, label: "today", datetime: null},
     ],
     isFinalized: true,
-    participants: ["kasra", "ghamar", "zahra"]
+    participants: [
+        {username: "kasra", voted: true, votes: [{optionId: 1, voteType: VoteType.YesIfNecessary}, {optionId: 2, voteType: VoteType.No}]},
+    ],
 };
 
 let poll3 = {
@@ -36,7 +44,7 @@ let poll3 = {
         {id: 2, label: "Sundays", datetime: null},
     ],
     isFinalized: false,
-    contributors: ["ali", "zahra", "ahmad"]
+    participants : []
 };
 
 let poll4 = {
@@ -49,7 +57,7 @@ let poll4 = {
         {id: 2, label: "Thursday", datetime: null},
     ],
     isFinalized: true,
-    contributors: ["ahmad", "gholi", "ghamar"]
+    participants: [],
 };
 
 let myPolls = [poll1, poll2];
@@ -87,7 +95,7 @@ class Api {
 
     finalize(poll) {
         // let response = fetch(this.prefix + "/finalize/", {method: 'PUT', body: {id: poll.id}});
-        
+
         //temporary:
         let targetpoll = allPolls.find(searchedPoll => searchedPoll.id === poll.id);
         targetpoll.isFinalized = true;
