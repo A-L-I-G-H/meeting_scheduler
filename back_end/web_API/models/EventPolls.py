@@ -7,6 +7,7 @@ from web_API.models.Options import Options
 
 class EventPolls(models.Model):
     creator = models.ForeignKey(User, on_delete = models.DO_NOTHING)
+    finalized_option = models.ForeignKey(Options, on_delete= models.DO_NOTHING)
     is_finalized = models.BooleanField(default = False)
     title = models.CharField(max_length = 50)
     description = models.CharField(max_length = 250)
