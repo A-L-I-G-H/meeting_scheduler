@@ -42,14 +42,7 @@ class PollPage extends React.Component {
                             </div>
 
                             {this.getOwnerSection()}
-
-                            <div style={{marginTop: '30px'}}>
-                                <span style={{color: 'grey', marginRight: '20px'}}>participants: </span>
-                                {
-                                    this.state.poll.participants.map((participant, i) => <span
-                                        style={{marginRight: '10px'}} key={i}>{participant.username}</span>)
-                                }
-                            </div>
+                            {this.getParticipantsSection()}
 
                             <a
                                 className="btn waves-effect waves-light modal-trigger"
@@ -76,6 +69,18 @@ class PollPage extends React.Component {
             )
         }
     }
+
+    getParticipantsSection = () => {
+        return (
+            <div style={{marginTop: '30px'}}>
+                <span style={{color: 'grey', marginRight: '20px'}}>participants: </span>
+                {
+                    this.state.poll.participants.map((participant, i) => <span
+                        style={{marginRight: '10px'}} key={i}>{participant.username}</span>)
+                }
+            </div>
+        );
+    };
 
     getOwnerSection = () => {
         return (
