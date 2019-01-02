@@ -6,14 +6,10 @@ import ChronusPage from './ChronusPage';
 import StorageManager from "../StorageManager";
 import {VoteType} from '../globals';
 
-
 class PollPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {poll: null};
-
-        this.fetchPoll = this.fetchPoll.bind(this);
-        bindMethods(this, [this.fetchPoll]);
 
         this.fetchPoll();
     }
@@ -81,7 +77,7 @@ class PollPage extends React.Component {
         }
     }
 
-    getOwnerSection() {
+    getOwnerSection = () => {
         return (
             <div style={{marginTop: '35px'}}>
                 <span style={{color: 'grey', marginRight: '20px'}}>owner:</span>
@@ -90,12 +86,12 @@ class PollPage extends React.Component {
         );
     };
 
-    fetchPoll () {
+    fetchPoll = () => {
         const pollId = parseInt(this.props.match.params.id);
         API.getPoll(pollId).then(poll => {
             this.setState({poll: poll});
         });
-    }
+    };
 
     componentDidUpdate() {
         let elems = Array.from(document.getElementsByClassName('modal'));
@@ -119,8 +115,6 @@ class VotingModal extends React.Component {
             alert: null,
         };
 
-        this.handleClickOnOptionVote = this.handleClickOnOptionVote.bind(this);
-        this.handleClickOnVote = this.handleClickOnVote.bind(this);
     }
 
     render() {
@@ -153,7 +147,7 @@ class VotingModal extends React.Component {
         );
     }
 
-    handleClickOnOptionVote(optionId, voteType) {
+    handleClickOnOptionVote = (optionId, voteType) => {
         let newSelected;
         if (this.state.selected[optionId] === voteType) {
             newSelected = Object.assign({}, this.state.selected);
@@ -162,9 +156,9 @@ class VotingModal extends React.Component {
             newSelected = Object.assign(this.state.selected, {[optionId]: voteType});
         }
         this.setState({selected: newSelected});
-    }
+    };
 
-    async handleClickOnVote() {
+    handleClickOnVote = async () => {
         console.log("handle vote called");
         let votes = [];
         for (let option of this.props.poll.options) {
@@ -188,7 +182,7 @@ class VotingModal extends React.Component {
             this.setState({alert: {type: "failure", message: "unable to vote."}});
         }
 
-    }
+    };
 
     static contextType = HistoryContext;
 }
@@ -281,8 +275,6 @@ class FinalizationModal extends React.Component {
             selected: null,
             alert: null,
         };
-
-        this.handleClickOnFinalize = this.handleClickOnFinalize.bind(this);
     }
 
     render() {
@@ -327,15 +319,15 @@ class FinalizationModal extends React.Component {
         );
     }
 
-    handleClickOnOption(option) {
+    handleClickOnOption = (option) => {
         if (this.state.selected === option) {
             this.setState({selected: null})
         } else {
             this.setState({selected: option})
         }
-    }
+    };
 
-    async handleClickOnFinalize() {
+    handleClickOnFinalize = async () => {
         console.log("handleClickOnFinal called");
         if (this.state.selected === null) {
             this.setState({alert: {type: "failure", message: "you must choose an option first"}});
