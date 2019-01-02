@@ -2275,13 +2275,13 @@ $jscomp.polyfill = function (e, r, p, m) {
       _this9.isOpen = false;
 
       /**
-       * Describes if dropdown content is scrollable
+       * Describes if dropdown message is scrollable
        * @type {Boolean}
        */
       _this9.isScrollable = false;
 
       /**
-       * Describes if touch moving on dropdown content
+       * Describes if touch moving on dropdown message
        * @type {Boolean}
        */
       _this9.isTouchMoving = false;
@@ -2289,7 +2289,7 @@ $jscomp.polyfill = function (e, r, p, m) {
       _this9.focusedIndex = -1;
       _this9.filterQuery = [];
 
-      // Move dropdown-content after dropdown-trigger
+      // Move dropdown-message after dropdown-trigger
       if (!!_this9.options.container) {
         $(_this9.options.container).append(_this9.dropdownEl);
       } else {
@@ -2400,7 +2400,7 @@ $jscomp.polyfill = function (e, r, p, m) {
       key: "_handleMouseLeave",
       value: function _handleMouseLeave(e) {
         var toEl = e.toElement || e.relatedTarget;
-        var leaveToDropdownContent = !!$(toEl).closest('.dropdown-content').length;
+        var leaveToDropdownContent = !!$(toEl).closest('.dropdown-message').length;
         var leaveToActiveDropdownTrigger = false;
 
         var $closestTrigger = $(toEl).closest('.dropdown-trigger');
@@ -2408,7 +2408,7 @@ $jscomp.polyfill = function (e, r, p, m) {
           leaveToActiveDropdownTrigger = true;
         }
 
-        // Close hover dropdown if mouse did not leave to either active dropdown-trigger or dropdown-content
+        // Close hover dropdown if mouse did not leave to either active dropdown-trigger or dropdown-message
         if (!leaveToActiveDropdownTrigger && !leaveToDropdownContent) {
           this.close();
         }
@@ -4010,14 +4010,14 @@ $jscomp.polyfill = function (e, r, p, m) {
       _this22.index = 0;
       _this22._setupActiveTabLink();
 
-      // Setup tabs content
+      // Setup tabs message
       if (_this22.options.swipeable) {
         _this22._setupSwipeableTabs();
       } else {
         _this22._setupNormalTabs();
       }
 
-      // Setup tabs indicator after content to ensure accurate widths
+      // Setup tabs indicator after message to ensure accurate widths
       _this22._setTabsAndTabWidth();
       _this22._createIndicator();
 
@@ -4117,7 +4117,7 @@ $jscomp.polyfill = function (e, r, p, m) {
         this.$activeTabLink.removeClass('active');
         var $oldContent = this.$content;
 
-        // Update the variables with the new link and content
+        // Update the variables with the new link and message
         this.$activeTabLink = tabLink;
         this.$content = $(M.escapeHash(tabLink[0].hash));
         this.$tabLinks = this.$el.children('li.tab').children('a');
@@ -4127,7 +4127,7 @@ $jscomp.polyfill = function (e, r, p, m) {
         var prevIndex = this.index;
         this.index = Math.max(this.$tabLinks.index(tabLink), 0);
 
-        // Swap content
+        // Swap message
         if (this.options.swipeable) {
           if (this._tabsCarousel) {
             this._tabsCarousel.set(this.index, function () {
@@ -4151,7 +4151,7 @@ $jscomp.polyfill = function (e, r, p, m) {
           }
         }
 
-        // Update widths after content is swapped (scrollbar bugfix)
+        // Update widths after message is swapped (scrollbar bugfix)
         this._setTabsAndTabWidth();
 
         // Update indicator
@@ -4232,7 +4232,7 @@ $jscomp.polyfill = function (e, r, p, m) {
           $tabsContent = $tabsContent.add($currContent);
         });
 
-        var $tabsWrapper = $('<div class="tabs-content carousel carousel-slider"></div>');
+        var $tabsWrapper = $('<div class="tabs-message carousel carousel-slider"></div>');
         $tabsContent.first().before($tabsWrapper);
         $tabsWrapper.append($tabsContent);
         $tabsContent[0].style.display = '';
@@ -4494,7 +4494,7 @@ $jscomp.polyfill = function (e, r, p, m) {
         this.tooltipEl = tooltipEl;
 
         var tooltipContentEl = document.createElement('div');
-        tooltipContentEl.classList.add('tooltip-content');
+        tooltipContentEl.classList.add('tooltip-message');
         tooltipContentEl.innerHTML = this.options.html;
         tooltipEl.appendChild(tooltipContentEl);
         document.body.appendChild(tooltipEl);
@@ -4502,7 +4502,7 @@ $jscomp.polyfill = function (e, r, p, m) {
     }, {
       key: "_updateTooltipContent",
       value: function _updateTooltipContent() {
-        this.tooltipEl.querySelector('.tooltip-content').innerHTML = this.options.html;
+        this.tooltipEl.querySelector('.tooltip-message').innerHTML = this.options.html;
       }
     }, {
       key: "_setupEventHandlers",
@@ -4532,7 +4532,7 @@ $jscomp.polyfill = function (e, r, p, m) {
         }
         isManual = isManual === undefined ? true : undefined; // Default value true
         this.isOpen = true;
-        // Update tooltip content with HTML attribute options
+        // Update tooltip message with HTML attribute options
         this.options = $.extend({}, this.options, this._getAttributeOptions());
         this._updateTooltipContent();
         this._setEnterDelayTimeout(isManual);
@@ -5169,7 +5169,7 @@ $jscomp.polyfill = function (e, r, p, m) {
           $(toast).addClass(this.options.classes);
         }
 
-        // Set content
+        // Set message
         if (typeof HTMLElement === 'object' ? this.message instanceof HTMLElement : this.message && typeof this.message === 'object' && this.message !== null && this.message.nodeType === 1 && typeof this.message.nodeName === 'string') {
           toast.appendChild(this.message);
 
@@ -6767,7 +6767,7 @@ $jscomp.polyfill = function (e, r, p, m) {
       }
 
       /**
-       * Render dropdown content
+       * Render dropdown message
        * @param {Object} data  data set
        * @param {String} val  current input value
        */
@@ -9640,7 +9640,7 @@ $jscomp.polyfill = function (e, r, p, m) {
     return Datepicker;
   }(Component);
 
-  Datepicker._template = ['<div class= "modal datepicker-modal">', '<div class="modal-content datepicker-container">', '<div class="datepicker-date-display">', '<span class="year-text"></span>', '<span class="date-text"></span>', '</div>', '<div class="datepicker-calendar-container">', '<div class="datepicker-calendar"></div>', '<div class="datepicker-footer">', '<button class="btn-flat datepicker-clear waves-effect" style="visibility: hidden;" type="button"></button>', '<div class="confirmation-btns">', '<button class="btn-flat datepicker-cancel waves-effect" type="button"></button>', '<button class="btn-flat datepicker-done waves-effect" type="button"></button>', '</div>', '</div>', '</div>', '</div>', '</div>'].join('');
+  Datepicker._template = ['<div class= "modal datepicker-modal">', '<div class="modal-message datepicker-container">', '<div class="datepicker-date-display">', '<span class="year-text"></span>', '<span class="date-text"></span>', '</div>', '<div class="datepicker-calendar-container">', '<div class="datepicker-calendar"></div>', '<div class="datepicker-footer">', '<button class="btn-flat datepicker-clear waves-effect" style="visibility: hidden;" type="button"></button>', '<div class="confirmation-btns">', '<button class="btn-flat datepicker-cancel waves-effect" type="button"></button>', '<button class="btn-flat datepicker-done waves-effect" type="button"></button>', '</div>', '</div>', '</div>', '</div>', '</div>'].join('');
 
   M.Datepicker = Datepicker;
 
@@ -10277,7 +10277,7 @@ $jscomp.polyfill = function (e, r, p, m) {
     return Timepicker;
   }(Component);
 
-  Timepicker._template = ['<div class= "modal timepicker-modal">', '<div class="modal-content timepicker-container">', '<div class="timepicker-digital-display">', '<div class="timepicker-text-container">', '<div class="timepicker-display-column">', '<span class="timepicker-span-hours text-primary"></span>', ':', '<span class="timepicker-span-minutes"></span>', '</div>', '<div class="timepicker-display-column timepicker-display-am-pm">', '<div class="timepicker-span-am-pm"></div>', '</div>', '</div>', '</div>', '<div class="timepicker-analog-display">', '<div class="timepicker-plate">', '<div class="timepicker-canvas"></div>', '<div class="timepicker-dial timepicker-hours"></div>', '<div class="timepicker-dial timepicker-minutes timepicker-dial-out"></div>', '</div>', '<div class="timepicker-footer"></div>', '</div>', '</div>', '</div>'].join('');
+  Timepicker._template = ['<div class= "modal timepicker-modal">', '<div class="modal-message timepicker-container">', '<div class="timepicker-digital-display">', '<div class="timepicker-text-container">', '<div class="timepicker-display-column">', '<span class="timepicker-span-hours text-primary"></span>', ':', '<span class="timepicker-span-minutes"></span>', '</div>', '<div class="timepicker-display-column timepicker-display-am-pm">', '<div class="timepicker-span-am-pm"></div>', '</div>', '</div>', '</div>', '<div class="timepicker-analog-display">', '<div class="timepicker-plate">', '<div class="timepicker-canvas"></div>', '<div class="timepicker-dial timepicker-hours"></div>', '<div class="timepicker-dial timepicker-minutes timepicker-dial-out"></div>', '</div>', '<div class="timepicker-footer"></div>', '</div>', '</div>', '</div>'].join('');
 
   M.Timepicker = Timepicker;
 
@@ -11394,7 +11394,7 @@ $jscomp.polyfill = function (e, r, p, m) {
         this.wrapper = this.$el.parent()[0];
         this.waveEl = $(this.wrapper).find('.tap-target-wave')[0];
         this.originEl = $(this.wrapper).find('.tap-target-origin')[0];
-        this.contentEl = this.$el.find('.tap-target-content')[0];
+        this.contentEl = this.$el.find('.tap-target-message')[0];
 
         // Creating wrapper
         if (!$(this.wrapper).hasClass('.tap-target-wrapper')) {
@@ -11404,10 +11404,10 @@ $jscomp.polyfill = function (e, r, p, m) {
           this.wrapper.append(this.el);
         }
 
-        // Creating content
+        // Creating message
         if (!this.contentEl) {
           this.contentEl = document.createElement('div');
-          this.contentEl.classList.add('tap-target-content');
+          this.contentEl.classList.add('tap-target-message');
           this.$el.append(this.contentEl);
         }
 
@@ -11473,7 +11473,7 @@ $jscomp.polyfill = function (e, r, p, m) {
         var tapTargetLeft = originLeft + originWidth / 2 - tapTargetWidth / 2;
         var tapTargetPosition = isFixed ? 'fixed' : 'absolute';
 
-        // Calculating content
+        // Calculating message
         var tapTargetTextWidth = isCenterX ? tapTargetWidth : tapTargetWidth / 2 + originWidth;
         var tapTargetTextHeight = tapTargetHeight / 2;
         var tapTargetTextTop = isTop ? tapTargetHeight / 2 : 0;
@@ -11498,7 +11498,7 @@ $jscomp.polyfill = function (e, r, p, m) {
         tapTargetWrapperCssObj.position = tapTargetPosition;
         $(this.wrapper).css(tapTargetWrapperCssObj);
 
-        // Setting content
+        // Setting message
         $(this.contentEl).css({
           width: tapTargetTextWidth + 'px',
           height: tapTargetTextHeight + 'px',
@@ -11783,7 +11783,7 @@ $jscomp.polyfill = function (e, r, p, m) {
         this.$selectOptions = this.$el.children('option, optgroup');
         this.dropdownOptions = document.createElement('ul');
         this.dropdownOptions.id = "select-options-" + M.guid();
-        $(this.dropdownOptions).addClass('dropdown-content select-dropdown ' + (this.isMultiple ? 'multiple-select-dropdown' : ''));
+        $(this.dropdownOptions).addClass('dropdown-message select-dropdown ' + (this.isMultiple ? 'multiple-select-dropdown' : ''));
 
         // Create dropdown structure.
         if (this.$selectOptions.length) {
@@ -11834,7 +11834,7 @@ $jscomp.polyfill = function (e, r, p, m) {
         if (!this.el.disabled) {
           var dropdownOptions = $.extend({}, this.options.dropdownOptions);
 
-          // Add callback for centering selected option when dropdown content is scrollable
+          // Add callback for centering selected option when dropdown message is scrollable
           dropdownOptions.onOpenEnd = function (el) {
             var selectedOption = $(_this71.dropdownOptions).find('.selected').first();
 

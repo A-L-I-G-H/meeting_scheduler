@@ -4,6 +4,8 @@ import React from "react";
 import {ColorTheme, HistoryContext} from "../globals";
 import ChronusPage from './ChronusPage';
 import StorageManager from "../StorageManager";
+import {VoteType} from '../globals';
+
 
 class PollPage extends React.Component {
     constructor(props) {
@@ -11,18 +13,18 @@ class PollPage extends React.Component {
         this.state = {poll: null};
 
         this.fetchPoll = this.fetchPoll.bind(this);
+        bindMethods(this, [this.fetchPoll]);
 
         this.fetchPoll();
     }
 
     render() {
-        console.log("my poll is:");
-        console.log(this.state.poll);
         if (this.state.poll) {
             return (
                 <ChronusPage history={this.props.history}>
                     <div className="container"
-                         style={{paddingLeft: '10%', paddingRight: '10%', marginTop: '40px', textAlign: 'center'}}>
+                         style={{paddingLeft: '10%', paddingRight: '10%', marginTop: '40px', textAlign: 'center'}}
+                    >
                         <div className="card" style={{paddingTop: '30px', paddingBottom: '80px'}}>
                             <h1>{this.state.poll.title}</h1>
                             <p>{this.state.poll.description}</p>
@@ -35,16 +37,15 @@ class PollPage extends React.Component {
                                         backgroundColor: ColorTheme.primaryColor,
                                         borderRadius: '7px',
                                         padding: '7px',
-                                        marginRight: '10px'
-                                    }} key={option.id}>{option.label}</span>)
+                                        marginRight: '10px',
+                                    }} key={option.id}>
+                                        {option.label}
+                                    </span>)
                                 }
                                 <br/>
                             </div>
 
-                            <div className="row" style={{marginTop: '35px'}}>
-                                <span style={{color: 'grey', marginRight: '20px'}}>owner:</span>
-                                <span>{this.state.poll.owner}</span>
-                            </div>
+                            {this.getOwnerSection()}
 
                             <div style={{marginTop: '30px'}}>
                                 <span style={{color: 'grey', marginRight: '20px'}}>participants: </span>
@@ -54,8 +55,17 @@ class PollPage extends React.Component {
                                 }
                             </div>
 
+                            <a
+                                className="btn waves-effect waves-light modal-trigger"
+                                href="#votingModal"
+                                style={{marginTop: '40px', backgroundColor: ColorTheme.primaryColor, color: 'white'}}
+                            >
+                                VOTE
+                            </a>
+
+                            <VotingModal poll={this.state.poll}/>
+
                             <FinalizationSection poll={this.state.poll}/>
-                            <FinalizationModal poll={this.state.poll}/>
 
                         </div>
                     </div>
@@ -71,7 +81,16 @@ class PollPage extends React.Component {
         }
     }
 
-    fetchPoll() {
+    getOwnerSection() {
+        return (
+            <div style={{marginTop: '35px'}}>
+                <span style={{color: 'grey', marginRight: '20px'}}>owner:</span>
+                <span>{this.state.poll.owner}</span>
+            </div>
+        );
+    };
+
+    fetchPoll () {
         const pollId = parseInt(this.props.match.params.id);
         API.getPoll(pollId).then(poll => {
             this.setState({poll: poll});
@@ -82,9 +101,142 @@ class PollPage extends React.Component {
         let elems = Array.from(document.getElementsByClassName('modal'));
         elems.forEach(elem => M.Modal.init(elem, {}));
     }
+
 }
 
 
+class VotingModal extends React.Component {
+    constructor(props) {
+        super(props);
+
+        const selected = {};
+        this.props.poll.options.forEach(option => {
+            selected[option.id] = null;
+        });
+
+        this.state = {
+            selected: selected,
+            alert: null,
+        };
+
+        this.handleClickOnOptionVote = this.handleClickOnOptionVote.bind(this);
+        this.handleClickOnVote = this.handleClickOnVote.bind(this);
+    }
+
+    render() {
+        return (
+            <div id="votingModal" className="modal">
+                <div className="modal-content">
+                    <h4 style={{color: 'black'}}>Choose your vote for each option</h4>
+                    <div style={{marginTop: '100px'}} className="container">
+                    {
+                        this.props.poll.options.map(option =>
+                            <PollOption {...option} onClick={this.handleClickOnOptionVote} selectedVoteType={this.state.selected[option.id]}/>
+                        )
+                    }
+                    </div>
+
+                    <div
+                        className="btn"
+                        style={{marginTop: '100px', backgroundColor: ColorTheme.primaryColor, color: 'white', clear: 'both'}}
+                        onClick={this.handleClickOnVote}
+                    >
+                        VOTE
+                    </div>
+
+                    <div style={{marginTop: '50px'}}>
+                        <AlertSection {...this.state.alert}/>
+                    </div>
+
+                </div>
+            </div>
+        );
+    }
+
+    handleClickOnOptionVote(optionId, voteType) {
+        let newSelected;
+        if (this.state.selected[optionId] === voteType) {
+            newSelected = Object.assign({}, this.state.selected);
+            newSelected[optionId] = null;
+        } else {
+            newSelected = Object.assign(this.state.selected, {[optionId]: voteType});
+        }
+        this.setState({selected: newSelected});
+    }
+
+    async handleClickOnVote() {
+        console.log("handle vote called");
+        let votes = [];
+        for (let option of this.props.poll.options) {
+            if (this.state.selected[option.id] === null) {
+                this.setState({alert: {type: "failure", message: "you must vote for every option!"}});
+                return;
+            } else {
+                votes.push({optionId: option.id, voteType: this.state.selected[option.id]});
+            }
+        }
+
+        let success = await API.vote(StorageManager.getLoggedInUser().username, this.props.poll.id, this.state.selected);
+        console.log("api success:");
+        console.log(success);
+        if (success) {
+            this.setState({alert: {type: "success", message: "your vote was successfully recorded."}});
+            setTimeout(() => {
+                this.context.replace('/polls/' + this.props.poll.id);
+            }, 1000);
+        } else {
+            this.setState({alert: {type: "failure", message: "unable to vote."}});
+        }
+
+    }
+
+    static contextType = HistoryContext;
+}
+
+class PollOption extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return (
+            <span style={{display: 'inline-block', marginRight: '40px', marginTop: '40px', paddingLeft: 'auto', paddingRight: 'auto'}}>
+            <div
+                style={{
+                    color: 'white',
+                    backgroundColor: ColorTheme.primaryColor,
+                    borderRadius: '7px',
+                    padding: '7px',
+                    width: '160px',
+                    display: 'inline-block',
+                }}
+                key={this.props.id}
+            >
+                {this.props.label}
+            </div>
+
+                {
+                    VoteType.getAll().map(voteType => (
+                        <div
+                            style={{
+                                marginTop: '18px',
+                                cursor: 'pointer',
+                                padding: '5px',
+                                backgroundColor: this.props.selectedVoteType === voteType.enum ? ColorTheme.accentColor : ColorTheme.lightPrimaryColor,
+                                color: this.props.selectedVoteType === voteType.enum ? 'white' : 'black',
+                            }}
+                            className="round-rect"
+                            onClick={() => this.props.onClick(this.props.id, voteType.enum)}
+                            key={voteType.enum}
+                        >
+                            {voteType.label}
+                        </div>
+                    ))
+                }
+        </span>
+        )
+    }
+}
 
 function FinalizationSection(props) {
     let content = null;
@@ -116,8 +268,9 @@ function FinalizationSection(props) {
     return (
         <div style={{marginTop: marginTop, fontWeight: 'bold'}}>
             {content}
+            <FinalizationModal poll={props.poll}/>
         </div>
-    )
+    );
 }
 
 
@@ -126,7 +279,7 @@ class FinalizationModal extends React.Component {
         super(props);
         this.state = {
             selected: null,
-            finalizationResult: null,
+            alert: null,
         };
 
         this.handleClickOnFinalize = this.handleClickOnFinalize.bind(this);
@@ -135,7 +288,7 @@ class FinalizationModal extends React.Component {
     render() {
         return (
             <div id="finalizeModal" className="modal">
-                <div className="modal-content" style={{height: '400px'}}>
+                <div className="modal-content">
                     <h4 style={{color: 'black'}}>Choose the final result of the poll</h4>
                     <div style={{marginTop: '100px'}}>
                         {
@@ -158,7 +311,7 @@ class FinalizationModal extends React.Component {
                     </div>
 
                     <div
-                        className="btn"
+                        className="btn waves-effect waves-light"
                         style={{marginTop: '100px', backgroundColor: ColorTheme.accentColor, color: 'white'}}
                         onClick={this.handleClickOnFinalize}
                     >
@@ -166,7 +319,7 @@ class FinalizationModal extends React.Component {
                     </div>
 
                     <div style={{marginTop: '50px'}}>
-                        <FinalizationResult result={this.state.finalizationResult}/>
+                        <AlertSection {...this.state.alert}/>
                     </div>
 
                 </div>
@@ -185,36 +338,34 @@ class FinalizationModal extends React.Component {
     async handleClickOnFinalize() {
         console.log("handleClickOnFinal called");
         if (this.state.selected === null) {
-            this.setState({finalizationResult: {success: false, message: "you must choose an option first"}});
+            this.setState({alert: {type: "failure", message: "you must choose an option first"}});
             return;
         }
 
         let success = await API.finalize(this.props.poll, this.state.selected.id);
         if (success) {
-            this.setState({finalizationResult: {success: true, message: "poll finalized successfully."}});
-            console.log("pushing at router");
+            this.setState({alert: {type: "success", message: "poll finalized successfully."}});
             console.log(this.props.poll.id);
-            console.log("done pushing");
             setTimeout(() => {
                 this.context.replace('/polls/' + this.props.poll.id);
             }, 1000);
         } else {
-            this.setState({finalizationResult: {success: false, message: "unable to finalize poll."}});
+            this.setState({alert: {type: "failure", message: "unable to finalize poll."}});
         }
     }
 
     static contextType = HistoryContext;
 }
 
-function FinalizationResult(props) {
-    if (props.result === null)
+function AlertSection(props) {
+    if (props.type === undefined)
         return <div style={{display: 'none'}}>_</div>;
-
-    if (props.result.success === true) {
-        return <div style={{color: 'green'}}>{props.result.message}</div>;
-    } else if (props.result.success === false) {
-        return <div style={{color: 'red'}}>{props.result.message}</div>;
-    }
+    else if (props.type === "success")
+        return <div style={{color: 'green'}}>{props.message}</div>;
+    else if (props.type === "failure")
+        return <div style={{color: 'red'}}>{props.message}</div>;
+    else
+        console.error("invalid type passed to AlertSection" + props.type);
 }
 
 

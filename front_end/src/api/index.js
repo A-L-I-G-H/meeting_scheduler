@@ -1,6 +1,5 @@
+import {VoteType} from "../globals";
 const fetch = require('node-fetch');
-
-const VoteType = {No: 0, Yes: 1, YesIfNecessary: 2};
 
 let poll1 = {
     id: 1,
@@ -104,7 +103,17 @@ class Api {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
                 resolve(true);
-            }, 500)
+            }, 1000);
+        });
+    }
+
+    vote(username, pollId, votes) {
+        let poll = allPolls.find(poll => poll.id === pollId);
+        poll.participants.push({username: username, voted: true, votes: votes});
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve(true);
+            }, 500);
         });
     }
 
