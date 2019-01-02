@@ -12,11 +12,12 @@ class ParticipantsVotes(models.Model):
         (NO, 'No'),
         (ONLY_IF_NECCESSARY, 'Only_if_neccessary')
     )
+
     event_poll = models.ForeignKey('EventPolls', on_delete = models.CASCADE)
     user = models.ForeignKey(User, on_delete = models.CASCADE)
     option = models.ForeignKey(Options, on_delete= models.CASCADE)
     vote_type = models.CharField(
-        max_length=1,
+        max_length= 1,
         choices= VOTE_TYPE_CHOICES,
         default= NO,
     )
