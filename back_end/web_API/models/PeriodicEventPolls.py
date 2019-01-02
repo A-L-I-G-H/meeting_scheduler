@@ -7,3 +7,9 @@ class PeriodicEventPolls(models.Model):
     start_date = models.DateTimeField
     end_date = models.DateTimeField
     period = models.IntegerField
+
+
+
+    class Meta:
+        db_table = 'PeriodicEventPolls'
+        app_label = 'web_API'
