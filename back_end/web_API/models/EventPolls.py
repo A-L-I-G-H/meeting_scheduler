@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from web_API.emailService.EmailService import *
-from web_API.models.Contributes import Contributes
+from web_API.models.ParticipatsVotes import Contributes
 from web_API.models.Options import Options
 
 
