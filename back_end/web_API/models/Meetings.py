@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib import admin
 
 class Meetings(models.Model):
-    date = models.DateTimeField
+    date_time = models.DateTimeField(null= True, blank= True)
 
     class Meta:
         db_table = 'Meetings'

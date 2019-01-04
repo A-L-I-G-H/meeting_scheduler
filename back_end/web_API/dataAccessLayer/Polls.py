@@ -1,5 +1,9 @@
 from web_API.models.EventPolls import EventPolls
 from web_API.models.ParticipantsVotes import ParticipantsVotes
+from web_API.emailService import EmailService
+from django.contrib.auth.models import User
+from web_API.models.Options import Options
+from django.db import models
 
 
 class Polls():
@@ -19,25 +23,33 @@ class Polls():
                                                                                 "event_poll__description",
                                                                                 "event_poll__is_finalized").distinct()
 
-    # @staticmethod
-    # def create_poll(request_body):
-    #     user = User.objects.filter(username = request_body['username'])[0]
-    #
-    #     new_poll = EventPolls(creator = user, is_finalized= False, title= request_body['title'], description= request_body['description'])
-    #     new_poll.save()
-    #     for option in request_body['options']:
-    #         new_option = Options(label= option, event_poll= new_poll)
-    #         new_option.save()
-    #
-    #     email_list = []
-    #
-    #     for contributor in request_body['contributors']:
-    #         contrib = User.objects.filter(username = contributor)[0]
-    #         new_contributes = Contributes(event_poll= new_poll, user= contrib)
-    #         new_contributes.save()
-    #         email_list.append(contrib.email)
-    #
-    #     send_email_to_users('new', 'new', email_list)
+    @staticmethod
+    def create_poll(request_body):
+        user = User.objects.filter(username = request_body['username'])[0]
+
+        new_poll = EventPolls(creator = user, is_finalized= False, title= request_body['title'], description= request_body['description'])
+        new_poll.save()
+
+        EmailService.send_email_to_these_usernames('new', 'new', request_body['participants'])
+
+        Polls.create_options(new_poll, request_body['options'], request_body['participants'])
+
+
+    @staticmethod
+    def create_options(event_poll, options, participants):
+        for option in options:
+            new_option = Options(label= option["label"], date_time= option["date-time"], event_poll= event_poll)
+
+            new_option.save()
+            Polls.create_participants_votes(event_poll, option, participants)
+
+
+    @staticmethod
+    def create_participants_votes(event_poll, option, participants_usernames):
+        for participant_username in participants_usernames:
+            participant = User.objects.filter(username = participant_username)[0]
+            new_participants_vote = ParticipantsVotes(event_poll= event_poll, user= participant, option= option)
+            new_participants_vote.save()
 
     # @staticmethod
     # def finalize(id):
