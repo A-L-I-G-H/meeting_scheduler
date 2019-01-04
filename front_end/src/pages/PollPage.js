@@ -5,6 +5,7 @@ import {ColorTheme, HistoryContext} from "../globals";
 import ChronusPage from './ChronusPage';
 import StorageManager from "../StorageManager";
 import {VoteType} from '../globals';
+import AlertSection from '../components/AlertSection'
 
 class PollPage extends React.Component {
     constructor(props) {
@@ -349,21 +350,11 @@ class FinalizationModal extends React.Component {
         } else {
             this.setState({alert: {type: "failure", message: "unable to finalize poll."}});
         }
-    }
+    };
 
     static contextType = HistoryContext;
 }
 
-function AlertSection(props) {
-    if (props.type === undefined)
-        return <div style={{display: 'none'}}>_</div>;
-    else if (props.type === "success")
-        return <div style={{color: 'green'}}>{props.message}</div>;
-    else if (props.type === "failure")
-        return <div style={{color: 'red'}}>{props.message}</div>;
-    else
-        console.error("invalid type passed to AlertSection" + props.type);
-}
 
 
 export default PollPage;

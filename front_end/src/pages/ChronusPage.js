@@ -3,6 +3,13 @@ import {ColorTheme, HistoryContext} from "../globals";
 import StorageManager from "../StorageManager";
 
 class ChronusPage extends React.Component {
+    constructor(props){
+        super(props);
+        if (props.history === undefined) {
+            console.log("Warning: no history passed to ChronusPage");
+        }
+    }
+
     render() {
         let history = this.props.history ? this.props.history : null;
         return (
