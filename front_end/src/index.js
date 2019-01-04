@@ -9,6 +9,7 @@ import StorageManager from './StorageManager';
 import {ColorTheme, HistoryContext} from "./globals";
 import PollPage from './pages/PollPage';
 import ChronusPage from './pages/ChronusPage';
+import CreatePollPage from './pages/CreatePollPage';
 
 
 class App extends React.Component {
@@ -26,12 +27,6 @@ class App extends React.Component {
                 <Route path="/polls/:id" component={PollPage}/>
             </Switch>
         );
-    }
-}
-
-class CreatePollPage extends React.Component {
-    constructor(props) {
-        super(props);
     }
 }
 
