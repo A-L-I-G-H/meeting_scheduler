@@ -5,9 +5,9 @@ from django.contrib import admin
 
 class PeriodicEventPolls(models.Model):
     event_poll = models.ForeignKey('EventPolls', on_delete= models.CASCADE)
-    start_date = models.DateTimeField
-    end_date = models.DateTimeField
-    period = models.IntegerField
+    start_date = models.DateTimeField(null=False)
+    end_date = models.DateTimeField(null=False)
+    period = models.IntegerField(null=False)
 
 
 
