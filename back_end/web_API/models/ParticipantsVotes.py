@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
-from web_API.models.Options import *
-from web_API.models.EventPolls import *
+from django.contrib import admin
+
 
 class ParticipantsVotes(models.Model):
     YES = 'Y'
@@ -15,7 +15,7 @@ class ParticipantsVotes(models.Model):
 
     event_poll = models.ForeignKey('EventPolls', on_delete = models.CASCADE)
     user = models.ForeignKey(User, on_delete = models.CASCADE)
-    option = models.ForeignKey(Options, on_delete= models.CASCADE)
+    option = models.ForeignKey('Options', on_delete= models.CASCADE)
     vote_type = models.CharField(
         max_length= 1,
         choices= VOTE_TYPE_CHOICES,
@@ -25,3 +25,6 @@ class ParticipantsVotes(models.Model):
     class Meta:
         db_table = 'ParticipantsVotes'
         app_label = 'web_API'
+
+
+admin.site.register(ParticipantsVotes)
