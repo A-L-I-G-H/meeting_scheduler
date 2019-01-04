@@ -10,7 +10,7 @@ class Polls():
 
     @staticmethod
     def get_poll(id):
-        return EventPolls.objects.filter(id= id).values("id", "title", "description", "is_finalized")
+        return EventPolls.objects.filter(id= id).values("id", "title", "description", "is_finalized", 'creator__username', "finalized_option_id")
 
     @staticmethod
     def get_created_polls(username):

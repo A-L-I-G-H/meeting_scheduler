@@ -8,5 +8,4 @@ class GetPollView(View):
     def get(self, request):
         request_parameters = get_request_parameters(request)
         poll = Polls.get_poll(request_parameters['id'])
-
-        return JsonResponse({'data': list(poll)}, content_type="application/json")
+        return JsonResponse(list(poll), safe=False, content_type="application/json")
