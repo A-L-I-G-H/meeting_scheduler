@@ -12,7 +12,7 @@ class CreatePollPage extends React.Component {
         this.state = {
             title: "",
             description: "",
-            options: [{label: "", date: "", time: ""}],
+            options: [{label: "", startDate: "", startTime: "", endDate: "", endTime: ""}],
             participants: [{username: ""}],
             isPeriodic: false,
             periodDays: "",
@@ -45,7 +45,6 @@ class CreatePollPage extends React.Component {
                         {this.getParticipantsSection()}
                         {this.getPeriodicSection()}
 
-                        {/*<div style={{marginLeft: 'auto', marginRight: 'auto', width: '100px', marginTop: '50px'}}>*/}
                         <div style={{textAlign: 'center', marginTop: '50px'}}>
                             <div className="waves-effect waves-light btn"
                                  style={{backgroundColor:ColorTheme.primaryColor, display: 'inline-block', marginBottom: '30px'}}
@@ -57,7 +56,6 @@ class CreatePollPage extends React.Component {
                             <AlertSection {...this.state.submitAlert}/>
                         </div>
 
-
                     </div>
 
                 </div>
@@ -67,10 +65,12 @@ class CreatePollPage extends React.Component {
 
     handleSubmit = async () => {
 
-        let options = options.map(option => {
-            let datetimeString = option.date + " " + option.time + ":00";
-            let datetime = new Date(datetimeString).getTime();
-            return {label: option.label, datetime: datetime};
+        let options = this.state.options.map(option => {
+            let startDatetimeString = option.startDate + " " + option.startTime + ":00";
+            let startDatetime = new Date(startDatetimeString).getTime();
+            let endDatetimeString = option.endDate + " " + option.endTime + ":00";
+            let endDatetime = new Date(endDatetimeString).getTime();
+            return {label: option.label, time:{start: startDatetime, end: endDatetime}};
         });
 
         let poll = {
@@ -92,9 +92,6 @@ class CreatePollPage extends React.Component {
         } else {
             this.setState({submitAlert: {type: "failure", message: "something went wrong!"}});
         }
-
-        console.log("context:");
-        console.log(this);
 
         setTimeout(
             () => this.props.history.push('/'),
@@ -193,21 +190,20 @@ class CreatePollPage extends React.Component {
     getOptionsSection() {
         return (
             <div style={{marginTop: '50px'}}>
-                            <span>Options:
-                                <i className="material-icons small"
-                                   style={{color: ColorTheme.accentColor, verticalAlign: '-7px', marginLeft: '10px', cursor:'pointer'}}
-                                   onClick={this.handleOptionAddition}
-                                >
-                                    add_circle
-                                </i>
-                                <i className="material-icons small"
-                                   style={{color: ColorTheme.accentColor, verticalAlign: '-7px', marginLeft: '5px', cursor:'pointer'}}
-                                   onClick={this.handleOptionRemoval}
-                                >
-                                    remove_circle
-                                </i>
-
-                            </span>
+                <span>Options:
+                    <i className="material-icons small"
+                       style={{color: ColorTheme.accentColor, verticalAlign: '-7px', marginLeft: '10px', cursor:'pointer'}}
+                       onClick={this.handleOptionAddition}
+                    >
+                        add_circle
+                    </i>
+                    <i className="material-icons small"
+                       style={{color: ColorTheme.accentColor, verticalAlign: '-7px', marginLeft: '5px', cursor:'pointer'}}
+                       onClick={this.handleOptionRemoval}
+                    >
+                        remove_circle
+                    </i>
+                </span>
 
                 {
                     this.state.options.map((option, index) => (
@@ -282,7 +278,7 @@ class Participant extends React.Component {
                     <input
                         placeholder="username" type="text"
                         onChange={(event) => this.props.onChange("username", event.target.value)}
-                        value={this.props.username}
+                        // value={this.props.username}
                     />
                 </div>
             </div>
@@ -292,28 +288,45 @@ class Participant extends React.Component {
 
 class Option extends React.Component {
     render() {
+        const dateTimeFieldsWidth = '110px';
         return (
             <div>
-                <div className="input-field inline" style={{width: '170px'}}>
+                <div className="input-field inline" style={{width: '190px', marginBottom: '-10px'}}>
                     <input
                         placeholder="label" type="text"
                         onChange={(event) => this.props.onChange("label", event.target.value)}
                         value={this.props.label}
                     />
                 </div>
-
-                <div className="input-field inline" style={{width: '130px'}}>
+                <br/>
+                <div className="input-field inline" style={{width: dateTimeFieldsWidth}}>
                     <input
-                        placeholder="date" type="text" className="datepicker"
-                        onSelect={(event) => this.props.onChange("date", event.target.value)}
+                        placeholder="start date" type="text" className="datepicker"
+                        onSelect={(event) => this.props.onChange("startDate", event.target.value)}
                         value={this.props.date}
                     />
                 </div>
 
-                <div className="input-field inline" style={{width: '100px'}}>
+                <div className="input-field inline" style={{width: dateTimeFieldsWidth}}>
                     <input
-                        placeholder="time" type="text" className="timepicker"
-                        onSelect={(event) => this.props.onChange("time", event.target.value)}
+                        placeholder="start time" type="text" className="timepicker"
+                        onSelect={(event) => this.props.onChange("startTime", event.target.value)}
+                        value={this.props.time}
+                    />
+                </div>
+
+                <div className="input-field inline" style={{width: dateTimeFieldsWidth}}>
+                    <input
+                        placeholder="end date" type="text" className="datepicker"
+                        onSelect={(event) => this.props.onChange("endDate", event.target.value)}
+                        value={this.props.date}
+                    />
+                </div>
+
+                <div className="input-field inline" style={{width: dateTimeFieldsWidth}}>
+                    <input
+                        placeholder="end time" type="text" className="timepicker"
+                        onSelect={(event) => this.props.onChange("endTime", event.target.value)}
                         value={this.props.time}
                     />
                 </div>
