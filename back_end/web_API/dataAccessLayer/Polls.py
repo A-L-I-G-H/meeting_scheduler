@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from web_API.models.Options import Options
 from web_API.dataAccessLayer.Option import Option
 from django.db import models
+import datetime
 
 
 class Polls():
@@ -63,21 +64,19 @@ class Polls():
     def create_poll(request_body):
         user = User.objects.filter(username = request_body['username'])[0]
 
-        new_poll = EventPolls(creator = user, is_finalized= False, title= request_body['title'], description= request_body['description'])
+        new_poll = EventPolls(creator = user, is_finalized= False, title= request_body['poll']['title'], description= request_body['poll']['description'])
         new_poll.save()
-
-        EmailService.send_email_to_these_usernames('new', 'new', request_body['participants'])
-
-        Polls.create_options(new_poll, request_body['options'], request_body['participants'])
+        EmailService.send_email_to_these_usernames('new', 'new', request_body['poll']['participants'])
+        Polls.create_options(new_poll, request_body['poll']['options'], request_body['poll']['participants'])
 
 
     @staticmethod
     def create_options(event_poll, options, participants):
         for option in options:
-            new_option = Options(label= option["label"], date_time= option["date-time"], event_poll= event_poll)
-
+            #dateTime = datetime.datetime.strptime(option['datetime'],'%Y-%m-%d %H:%M:%S')
+            new_option = Options(label= option['label'], date_time= option['datetime'], event_poll= event_poll)
             new_option.save()
-            Polls.create_participants_votes(event_poll, option, participants)
+            Polls.create_participants_votes(event_poll, new_option, participants)
 
 
     @staticmethod
