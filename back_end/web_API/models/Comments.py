@@ -6,7 +6,7 @@ class Comments(models.Model):
     option = models.ForeignKey('Options', on_delete= models.CASCADE)
     user = models.ForeignKey(User, on_delete= models.CASCADE)
     text = models.CharField(max_length= 100)
-    reply_id = models.IntegerField(null=False)
+    reply_id = models.IntegerField(null= True, blank= True)
 
     class Meta:
         db_table = 'Comments'

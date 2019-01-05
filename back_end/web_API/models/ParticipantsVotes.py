@@ -4,9 +4,9 @@ from django.contrib import admin
 
 
 class ParticipantsVotes(models.Model):
-    YES = 'Y'
-    NO = 'N'
-    ONLY_IF_NECCESSARY = 'O'
+    YES = 1
+    NO = 0
+    ONLY_IF_NECCESSARY = 2
     VOTE_TYPE_CHOICES = (
         (YES, 'Yes'),
         (NO, 'No'),
@@ -16,8 +16,7 @@ class ParticipantsVotes(models.Model):
     event_poll = models.ForeignKey('EventPolls', on_delete = models.CASCADE)
     user = models.ForeignKey(User, on_delete = models.CASCADE)
     option = models.ForeignKey('Options', on_delete= models.CASCADE)
-    vote_type = models.CharField(
-        max_length= 1,
+    vote_type = models.IntegerField(
         choices= VOTE_TYPE_CHOICES,
         default= NO,
     )

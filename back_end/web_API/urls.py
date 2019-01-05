@@ -8,4 +8,5 @@ urlpatterns = [
     path('polls/createPoll', CreateNewPollView.as_view()),
     path('polls/finalize', FinalizePollView.as_view()),
     path('polls/vote', VoteView.as_view()),
+    path('comments', AddCommentView.as_view()),
 ]
