@@ -79,20 +79,4 @@ class Polls():
             participant = User.objects.filter(username = participant_username)[0]
             new_participants_vote = ParticipantsVotes(event_poll= event_poll, user= participant, option= option)
             new_participants_vote.save()
-
-    # @staticmethod
-    # def finalize(id):
-    #     poll = EventPolls.objects.filter(id= id)[0]
-    #     poll.is_finalized = True
-    #     poll.save()
-    #
-    #     email_list = EventPolls.get_contributors_emails(poll)
-    #     send_email_to_users('fin', 'fin', email_list)
-
-    # def get_contributors_emails(poll):
-    #     email_query_set = Contributes.objects.filter(event_poll=poll).values("user").values("user__email")
-    #     email_list = []
-    #     for email in email_query_set:
-    #         email_list.append(email['user__email'])
-    #
-    #     return email_list
+            
