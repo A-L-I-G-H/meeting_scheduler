@@ -76,6 +76,7 @@ let involvedPolls = [poll3, poll1, poll4];
 
 let allPolls = [poll1, poll2, poll3, poll4];
 
+let commentIdCounter = 10;
 
 class Api {
     prefix = "http://localhost:8000";
@@ -122,14 +123,13 @@ class Api {
         poll.participants.push({username: username, voted: true, votes: votes});
         return new Promise((resolve, reject) => {
             setTimeout(() => {
-                resolve(true);
+                resolve(true, );
             }, 500);
         });
     }
 
 
     createPoll(creatorUsername, poll) {
-
         return new Promise((resolve, reject) => {
            setTimeout(() => {
                resolve(true);
@@ -138,8 +138,9 @@ class Api {
     }
 
     post(comment) {
+        commentIdCounter++;
         return new Promise(resolve => {
-            setTimeout(() => resolve(true), 1000);
+            setTimeout(() => resolve([true, commentIdCounter]), 1000);
         });
     }
 

@@ -153,7 +153,7 @@ class CommentsColumn extends React.Component {
             <div
                 className={"col m"+(12/this.props.poll.options.length) }
             >
-                <span style={{backgroundColor: ColorTheme.primaryColor, padding: '10px', borderRadius: '8px', color: 'white'}}>{this.props.option.label}</span>
+                <span style={{backgroundColor: ColorTheme.darkPrimaryColor, padding: '10px', borderRadius: '8px', color: 'white'}}>{this.props.option.label}</span>
 
                 <div style={{textAlign: 'left'}}>
                     {this.props.option.comments.map(comment => (
@@ -163,8 +163,26 @@ class CommentsColumn extends React.Component {
                     ))}
                 </div>
 
-                <AlertSection {...this.state.postingAlert}/>
+                <div className="card" style={{borderRadius: '5px', paddingBottom: '5px', paddingLeft: '5px', paddingRight: '5px', marginTop: '40px'}}>
+                    <div className="input-field" style={{marginBottom: '0px'}}>
+                        <textarea className="materialize-textarea" style={{marginBottom: '3px'}} onChange={(event) => {this.state.currentCommentContent = event.target.value}} />
+                    </div>
+                </div>
 
+                <div
+                    className="btn waves-effect waves-light"
+                    style={{marginTop: '5px', color: 'white', backgroundColor:ColorTheme.primaryColor}}
+                    onClick={() => this.handlePost({
+                        content: this.state.currentCommentContent,
+                        writer: StorageManager.getLoggedInUser().username,
+                        commentedOnId: this.props.option.id,
+                        isReply: false,
+                    })}
+                >
+                    comment
+                </div>
+
+                <AlertSection style={{marginTop: '20px'}} {...this.state.postingAlert}/>
             </div>
         )
 
@@ -176,6 +194,7 @@ class CommentsColumn extends React.Component {
             <div key={comment.id} style={{paddingTop: '40px'}}>
                 <div style={{paddingLeft: leftIndent, borderWidth: '5px'}}>
                     {comment.content}
+                    <div style={{marginTop: '5px', color:ColorTheme.passiveElement}}>writer: {comment.writer}</div>
                     <div
                         style={{color: ColorTheme.darkPrimaryColor, marginTop: '10px', cursor: 'pointer'}}
                         onClick={() => this.setState({visibleCommentingBoxId: comment.id})}
@@ -187,12 +206,14 @@ class CommentsColumn extends React.Component {
                 <div className="card" style={{borderRadius: '5px', marginLeft: leftIndent, paddingBottom: '5px', paddingLeft: '5px', paddingRight: '5px', marginTop: '20px',
                     display: this.state.visibleCommentingBoxId === comment.id ? 'block' : 'none'}}
                 >
-                    <div className="input-field">
-                        <textarea className="materialize-textarea" style={{marginBottom: '3px'}} onChange={(event) => {this.state.currentCommentContent = event.target.value}} />
+                    <div className="input-field" style={{marginBottom: '0px'}}>
+                        <textarea className="materialize-textarea" style={{marginBottom: '3px'}}
+                                  onChange={(event) => this.setState({currentCommentContent: event.target.value})}
+                        />
                     </div>
 
-                    <span
-                        style={{color: ColorTheme.darkPrimaryColor, cursor: 'pointer', marginTop: '-10px', display: 'inline-block'}}
+                    <div
+                        style={{color: ColorTheme.darkPrimaryColor, cursor: 'pointer', display: 'inline-block'}}
                         onClick={() => this.handlePost({
                             content: this.state.currentCommentContent,
                             writer: StorageManager.getLoggedInUser().username,
@@ -202,7 +223,7 @@ class CommentsColumn extends React.Component {
                         })}
                     >
                         post
-                    </span>
+                    </div>
                 </div>
 
                 {this.findReplies(comment).map(reply => (
@@ -217,10 +238,11 @@ class CommentsColumn extends React.Component {
     }
 
     handlePost = async (comment) => {
-        let success = await API.post();
+        let success, newId;
+        [success, newId] = await API.post(comment);
+        comment.id = newId;
         if (success) {
-            console.log("got to handle");
-            this.setState({postingAlert: null, visibleCommentingBoxId: null});
+            this.setState({postingAlert: null, visibleCommentingBoxId: null, currentCommentContent: ""});
             this.props.onNewComment(comment);
         } else {
             this.setState({postingAlert: {type: "failure", message: "something went wrong!"}});

@@ -49,7 +49,7 @@ class NavBar extends React.Component {
             paddingRight: '50px',
             display: 'block',
             backgroundColor: ColorTheme.primaryColor,
-            zIndex: 1,
+            zIndex: 4,
         };
 
         return  (
