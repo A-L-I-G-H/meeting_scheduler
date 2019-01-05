@@ -1,25 +1,12 @@
 from web_API.models.EventPolls import EventPolls
 from web_API.models.ParticipantsVotes import ParticipantsVotes
+from web_API.emailService import EmailService
 from django.contrib.auth.models import User
 from web_API.models.Options import Options
 from web_API.dataAccessLayer.Option import Option
-from web_API.emailService import EmailService
 
 
 class Polls():
-
-    @staticmethod
-    def reopen_poll(fields):
-        poll = EventPolls.objects.filter(id= fields['pollId'])[0]
-        poll.is_finalized = False
-        poll.save()
-
-        email_list = ParticipantsVotes.objects.filter(event_poll= poll).values_list("user__email", flat= True)
-        EmailService.send_email_to_users("reopened", "reopened", email_list)
-
-        return {"OK": True}
-
-
 
     @staticmethod
     def get_poll(id):
@@ -65,8 +52,6 @@ class Polls():
 
         Polls.create_options(new_poll, request_body['options'], request_body['participants'])
 
-        return {"id": new_poll.id}
-
 
     @staticmethod
     def create_options(event_poll, options, participants):
@@ -74,7 +59,7 @@ class Polls():
             new_option = Options(label= option["label"], date_time= option["date-time"], event_poll= event_poll)
 
             new_option.save()
-            Polls.create_participants_votes(event_poll, new_option, participants)
+            Polls.create_participants_votes(event_poll, option, participants)
 
 
     @staticmethod

@@ -18,5 +18,5 @@ class Option():
         return options_list
 
     @staticmethod
-    def get_light_weight_options(poll_id):
-        return list(Options.objects.filter(event_poll_id = poll_id).values("id", "label", "date_time"))
+    def get_light_weight_options(option_id):
+        return list(Options.objects.filter(id = option_id).values("id", "label", "date_time"))
