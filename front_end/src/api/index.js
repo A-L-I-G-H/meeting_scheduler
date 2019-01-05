@@ -7,9 +7,19 @@ let poll1 = {
     description: "final assignment for AP. which time is better for you?",
     owner: "ahmad",
     options:[
-        {id: 1, label: "tuesday 8:00", datetime: null},
-        {id: 2, label: "wednesday 5:00", datetime: null},
-        {id: 3, label: "friday 10:00", datetime: null},
+        {
+            id: 1,
+            label: "tuesday 8:00",
+            datetime: null,
+            comments: [
+                {id: 0, content: "a small comment", writer: "saeed", isReply: false},
+                {id: 1, content: "a bigger comment, which needs some extra stuff to fill the screen.", writer: "mehdi", isReply: false},
+                {id: 2, content: "reply to small comment", writer: "ahmad", isReply: true, repliedToId: 0},
+                {id: 3, content: "reply to reply to small comment", writer: "zahra", isReply: true, repliedToId: 2},
+            ]
+        },
+        {id: 2, label: "wednesday 5:00", datetime: null, comments: []},
+        {id: 3, label: "friday 10:00", datetime: null, comments: []},
     ],
     isFinalized: false,
     participants: [
@@ -120,11 +130,16 @@ class Api {
 
     createPoll(creatorUsername, poll) {
 
-
         return new Promise((resolve, reject) => {
            setTimeout(() => {
                resolve(true);
            }, 1000);
+        });
+    }
+
+    post(comment) {
+        return new Promise(resolve => {
+            setTimeout(() => resolve(true), 1000);
         });
     }
 

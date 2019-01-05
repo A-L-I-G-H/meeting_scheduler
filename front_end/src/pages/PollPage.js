@@ -22,7 +22,7 @@ class PollPage extends React.Component {
                     <div className="container"
                          style={{paddingLeft: '10%', paddingRight: '10%', marginTop: '40px', textAlign: 'center'}}
                     >
-                        <div className="card" style={{paddingTop: '30px', paddingBottom: '80px'}}>
+                        <div className="card" style={{paddingTop: '30px'}}>
                             <h1>{this.state.poll.title}</h1>
                             <p>{this.state.poll.description}</p>
 
@@ -57,6 +57,26 @@ class PollPage extends React.Component {
 
                             <FinalizationSection poll={this.state.poll}/>
 
+                            <ul className="collapsible" style={{boxShadow: 'none', borderWidth: '0px', marginTop: '50px'}}>
+                                <li>
+                                    <div className="collapsible-header" style={{textAlign: 'center'}}>
+                                            <i className="material-icons">dehaze</i>
+                                            Comments Section
+                                    </div>
+                                    <div className="collapsible-body">
+
+                                        <div className="row" style={{marginTop: '30px'}}>
+                                            {
+                                                this.state.poll.options.map(option =>
+                                                    <CommentsColumn key={option.id} poll={this.state.poll} option={option} onNewComment={this.handleNewComment}/>
+                                                )
+                                            }
+                                        </div>
+                                    </div>
+                                </li>
+
+                            </ul>
+
                         </div>
                     </div>
 
@@ -70,6 +90,15 @@ class PollPage extends React.Component {
             )
         }
     }
+
+    handleNewComment = (comment) => {
+        console.log("handle new comment called", comment);
+        let newPoll = Object.assign({}, this.state.poll);
+        let option = newPoll.options.find(option => option.id === comment.commentedOnId);
+        option.comments.push(comment);
+        console.log("new poll:",newPoll);
+        this.setState({poll: newPoll, visibleCommentingBoxId: null, postingAlert: null});
+    };
 
     getParticipantsSection = () => {
         return (
@@ -102,8 +131,101 @@ class PollPage extends React.Component {
     componentDidUpdate() {
         let elems = Array.from(document.getElementsByClassName('modal'));
         elems.forEach(elem => M.Modal.init(elem, {}));
+        M.Collapsible.init(document.querySelectorAll('.collapsible'), {});
     }
 
+}
+
+class CommentsColumn extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            currentCommentContent: "",
+            visibleCommentingBoxId: null,
+            postingAlert: null,
+        }
+    }
+
+    render() {
+        let indentLevel = 0;
+
+        return (
+            <div
+                className={"col m"+(12/this.props.poll.options.length) }
+            >
+                <span style={{backgroundColor: ColorTheme.primaryColor, padding: '10px', borderRadius: '8px', color: 'white'}}>{this.props.option.label}</span>
+
+                <div style={{textAlign: 'left'}}>
+                    {this.props.option.comments.map(comment => (
+                        comment.isReply === false && (
+                            this.renderComment(comment, indentLevel)
+                        )
+                    ))}
+                </div>
+
+                <AlertSection {...this.state.postingAlert}/>
+
+            </div>
+        )
+
+    }
+
+    renderComment(comment, indentLevel) {
+        let leftIndent = (20 * indentLevel) + 'px';
+        return (
+            <div key={comment.id} style={{paddingTop: '40px'}}>
+                <div style={{paddingLeft: leftIndent, borderWidth: '5px'}}>
+                    {comment.content}
+                    <div
+                        style={{color: ColorTheme.darkPrimaryColor, marginTop: '10px', cursor: 'pointer'}}
+                        onClick={() => this.setState({visibleCommentingBoxId: comment.id})}
+                    >
+                        Reply
+                    </div>
+                </div>
+
+                <div className="card" style={{borderRadius: '5px', marginLeft: leftIndent, paddingBottom: '5px', paddingLeft: '5px', paddingRight: '5px', marginTop: '20px',
+                    display: this.state.visibleCommentingBoxId === comment.id ? 'block' : 'none'}}
+                >
+                    <div className="input-field">
+                        <textarea className="materialize-textarea" style={{marginBottom: '3px'}} onChange={(event) => {this.state.currentCommentContent = event.target.value}} />
+                    </div>
+
+                    <span
+                        style={{color: ColorTheme.darkPrimaryColor, cursor: 'pointer', marginTop: '-10px', display: 'inline-block'}}
+                        onClick={() => this.handlePost({
+                            content: this.state.currentCommentContent,
+                            writer: StorageManager.getLoggedInUser().username,
+                            commentedOnId: this.props.option.id,
+                            isReply: true,
+                            repliedToId: comment.id,
+                        })}
+                    >
+                        post
+                    </span>
+                </div>
+
+                {this.findReplies(comment).map(reply => (
+                    this.renderComment(reply, indentLevel + 1)
+                ))}
+            </div>
+        );
+    }
+
+    findReplies(comment) {
+        return this.props.option.comments.filter(each => each.isReply === true && each.repliedToId === comment.id);
+    }
+
+    handlePost = async (comment) => {
+        let success = await API.post();
+        if (success) {
+            console.log("got to handle");
+            this.setState({postingAlert: null, visibleCommentingBoxId: null});
+            this.props.onNewComment(comment);
+        } else {
+            this.setState({postingAlert: {type: "failure", message: "something went wrong!"}});
+        }
+    }
 }
 
 
@@ -131,7 +253,7 @@ class VotingModal extends React.Component {
                     <div style={{marginTop: '100px'}} className="container">
                     {
                         this.props.poll.options.map(option =>
-                            <PollOption {...option} onClick={this.handleClickOnOptionVote} selectedVoteType={this.state.selected[option.id]}/>
+                            <PollOption key={option.id} {...option} onClick={this.handleClickOnOptionVote} selectedVoteType={this.state.selected[option.id]}/>
                         )
                     }
                     </div>
