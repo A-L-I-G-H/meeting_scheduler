@@ -9,6 +9,17 @@ from web_API.dataAccessLayer.Option import Option
 class Polls():
 
     @staticmethod
+    def reopen_poll(fields):
+        poll = EventPolls.objects.filter(id=fields['pollId'])[0]
+        poll.is_finalized = False
+        poll.save()
+
+        email_list = ParticipantsVotes.objects.filter(event_poll=poll).values_list("user__email", flat=True)
+        EmailService.send_email_to_users("reopened", "reopened", email_list)
+
+        return {"OK": True}
+
+    @staticmethod
     def get_poll(id):
         poll = EventPolls.objects.filter(id= id).values("id", "title", "description", "is_finalized", 'creator__username', "finalized_option_id")[0]
         options = Option.get_options(id)
@@ -56,10 +67,10 @@ class Polls():
     @staticmethod
     def create_options(event_poll, options, participants):
         for option in options:
-            new_option = Options(label= option["label"], date_time= option["date-time"], event_poll= event_poll)
+            new_option = Options(label= option["label"], date_time= option["datetime"], event_poll= event_poll)
 
             new_option.save()
-            Polls.create_participants_votes(event_poll, option, participants)
+            Polls.create_participants_votes(event_poll, new_option, participants)
 
 
     @staticmethod
