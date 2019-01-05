@@ -53,6 +53,8 @@ class Polls():
 
         Polls.create_options(new_poll, request_body['options'], request_body['participants'])
 
+        return {"id": new_poll.id}
+
 
     @staticmethod
     def create_options(event_poll, options, participants):
@@ -60,7 +62,7 @@ class Polls():
             new_option = Options(label= option["label"], date_time= option["date-time"], event_poll= event_poll)
 
             new_option.save()
-            Polls.create_participants_votes(event_poll, option, participants)
+            Polls.create_participants_votes(event_poll, new_option, participants)
 
 
     @staticmethod

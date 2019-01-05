@@ -7,6 +7,6 @@ urlpatterns = [
     path('polls/involved', GetInvolvedPollsView.as_view()),
     path('polls/createPoll', CreateNewPollView.as_view()),
     path('polls/finalize', FinalizePollView.as_view()),
-    path('polls/vote', VoteView.as_view()),
+    path('votes', VoteView.as_view()),
     path('comments', AddCommentView.as_view()),
 ]
