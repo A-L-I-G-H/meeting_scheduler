@@ -3,7 +3,7 @@ from web_API.models.ParticipantsVotes import ParticipantsVotes
 from web_API.emailService import EmailService
 from django.contrib.auth.models import User
 from web_API.models.Options import Options
-from web_API.dataAccessLayer.Options import Option
+from web_API.dataAccessLayer.Option import Option
 from django.db import models
 
 
@@ -11,9 +11,10 @@ class Polls():
 
     @staticmethod
     def get_poll(id):
-        polls = EventPolls.objects.filter(id= id).values("id", "title", "description", "is_finalized", 'creator__username', "finalized_option_id")
+        poll = EventPolls.objects.filter(id= id).values("id", "title", "description", "is_finalized", 'creator__username', "finalized_option_id")[0]
         options = Option.get_options(id)
-        return polls
+        poll['options'] = options
+        return poll
 
     @staticmethod
     def get_created_polls(username):
