@@ -21,7 +21,8 @@ let poll1 = {
         {id: 2, label: "wednesday 5:00", datetime: null, comments: []},
         {id: 3, label: "friday 10:00", datetime: null, comments: []},
     ],
-    isFinalized: false,
+    isFinalized: true,
+    finalizedOptionId: 2,
     participants: [
         {username: "ahmad", voted: false},
         {username: "zahra", voted: true, votes: [{optionId: 1, voteType: VoteType.No}, {optionId: 2, voteType: VoteType.Yes}, {optionId: 3, voteType: VoteType.YesIfNecessary}]}
@@ -34,12 +35,13 @@ let poll2 = {
     description: "implementation of dijkstra",
     owner: "kasra",
     options: [
-        {id: 1, label: "tomorrow", datetime: null},
-        {id: 2, label: "today", datetime: null},
+        {id: 1, label: "tomorrow", datetime: null, comments: []},
+        {id: 2, label: "today", datetime: null, comments: []},
     ],
     isFinalized: true,
     finalizedOptionId: 2,
     participants: [
+        {username: "ahmad", voted: false},
         {username: "kasra", voted: true, votes: [{optionId: 1, voteType: VoteType.YesIfNecessary}, {optionId: 2, voteType: VoteType.No}]},
     ],
 };
@@ -96,6 +98,7 @@ class Api {
     }
 
     async getPoll(id) {
+        console.log("get poll from api called:");
         let allPolls = myPolls.concat(involvedPolls);
         return new Promise((resolve, reject) => {
            setTimeout(() => {
@@ -120,7 +123,11 @@ class Api {
 
     vote(username, pollId, votes) {
         let poll = allPolls.find(poll => poll.id === pollId);
-        poll.participants.push({username: username, voted: true, votes: votes});
+        let participant = poll.participants.find(participant => participant.username === username);
+        participant.voted = true;
+        participant.votes = votes;
+        console.log("setting votes to:");
+        console.log(votes);
         return new Promise((resolve, reject) => {
             setTimeout(() => {
                 resolve(true, );
@@ -141,6 +148,23 @@ class Api {
         commentIdCounter++;
         return new Promise(resolve => {
             setTimeout(() => resolve([true, commentIdCounter]), 1000);
+        });
+    }
+
+    reopen(poll) {
+        console.log("poll passed is:");
+        console.log(poll);
+        let mockPoll = allPolls.find(each => each.id === poll.id);
+        console.log("mockPoll:", mockPoll);
+
+        mockPoll.isFinalized = false;
+        delete mockPoll.finalizedOptionId;
+
+        console.log("mockPoll after change:");
+        console.log(mockPoll);
+
+        return new Promise(resolve => {
+           setTimeout(() => resolve(true), 1000);
         });
     }
 

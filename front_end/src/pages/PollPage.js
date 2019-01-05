@@ -44,18 +44,9 @@ class PollPage extends React.Component {
 
                             {this.getOwnerSection()}
                             {this.getParticipantsSection()}
+                            {this.getVotingSection()}
 
-                            <a
-                                className="btn waves-effect waves-light modal-trigger"
-                                href="#votingModal"
-                                style={{marginTop: '40px', backgroundColor: ColorTheme.primaryColor, color: 'white'}}
-                            >
-                                VOTE
-                            </a>
-
-                            <VotingModal poll={this.state.poll}/>
-
-                            <FinalizationSection poll={this.state.poll}/>
+                            <FinalizationSection poll={this.state.poll} onRefresh={this.fetchPoll}/>
 
                             <ul className="collapsible" style={{boxShadow: 'none', borderWidth: '0px', marginTop: '50px'}}>
                                 <li>
@@ -89,6 +80,29 @@ class PollPage extends React.Component {
                 </div>
             )
         }
+    }
+
+    getVotingSection() {
+        let participant = this.state.poll.participants.find(
+            participant => participant.username === StorageManager.getLoggedInUser().username);
+
+        let userHasVoteAccess =  participant !== undefined;
+
+        return (
+            userHasVoteAccess && (
+            <div style={{textAlign: 'center'}}>
+                <a
+                    className="btn waves-effect waves-light modal-trigger"
+                    href="#votingModal"
+                    style={{marginTop: '40px', backgroundColor: ColorTheme.primaryColor, color: 'white'}}
+                >
+                    {participant.voted ? "change vote" : "vote"}
+                </a>
+
+                <VotingModal poll={this.state.poll} participant={participant}/>
+            </div>
+            )
+        );
     }
 
     handleNewComment = (comment) => {
@@ -153,7 +167,7 @@ class CommentsColumn extends React.Component {
             <div
                 className={"col m"+(12/this.props.poll.options.length) }
             >
-                <span style={{backgroundColor: ColorTheme.darkPrimaryColor, padding: '10px', borderRadius: '8px', color: 'white'}}>{this.props.option.label}</span>
+                <span style={{width: '100%', display: 'inline-block', backgroundColor: ColorTheme.darkPrimaryColor, padding: '10px', borderRadius: '8px', color: 'white'}}>{this.props.option.label}</span>
 
                 <div style={{textAlign: 'left'}}>
                     {this.props.option.comments.map(comment => (
@@ -257,7 +271,11 @@ class VotingModal extends React.Component {
 
         const selected = {};
         this.props.poll.options.forEach(option => {
-            selected[option.id] = null;
+            if (props.participant.voted) {
+                selected[option.id] = props.participant.votes.find(vote => vote.optionId === option.id).voteType;
+            } else {
+                selected[option.id] = null;
+            }
         });
 
         this.state = {
@@ -320,12 +338,11 @@ class VotingModal extends React.Component {
             }
         }
 
-        let success = await API.vote(StorageManager.getLoggedInUser().username, this.props.poll.id, this.state.selected);
-        console.log("api success:");
-        console.log(success);
+        let success = await API.vote(StorageManager.getLoggedInUser().username, this.props.poll.id, votes);
         if (success) {
             this.setState({alert: {type: "success", message: "your vote was successfully recorded."}});
             setTimeout(() => {
+                this.setState({alert: null});
                 this.context.replace('/polls/' + this.props.poll.id);
             }, 1000);
         } else {
@@ -382,39 +399,81 @@ class PollOption extends React.Component {
     }
 }
 
-function FinalizationSection(props) {
-    let content = null;
-    let marginTop = '35px';
-    const finalizedOption = props.poll.options.find(option => option.id === props.poll.finalizedOptionId);
-    if (props.poll.isFinalized) {
-        content = (
-            <div>
-                <span style={{color: ColorTheme.accentColor, marginRight: '10px'}}>FINALIZED:</span>
-                <span style={{
-                    color: 'white',
-                    backgroundColor: ColorTheme.accentColor,
-                    borderRadius: '7px',
-                    padding: '7px',
-                    marginRight: '10px'
-                }}>{finalizedOption.label}</span>
+class FinalizationSection extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            reopenAlert: null,
+        }
+    }
+
+    render() {
+        let content = null;
+        let marginTop = '35px';
+        const finalizedOption = this.props.poll.options.find(option => option.id === this.props.poll.finalizedOptionId);
+        if (this.props.poll.isFinalized) {
+            content = (
+                <div>
+                    <span style={{color: 'grey', marginRight: '10px', fontWeight: "normal"}}>finalized:</span>
+                    <span style={{
+                        color: 'white',
+                        backgroundColor: ColorTheme.accentColor,
+                        borderRadius: '7px',
+                        padding: '7px',
+                        marginRight: '10px'
+                    }}>{finalizedOption.label}</span>
+                    <br/>
+                    <div
+                        className="waves-effect waves-effect waves-light btn"
+                        style={{backgroundColor:ColorTheme.accentColor , color: 'white', marginTop: '25px'}}
+                        onClick={this.handleReopen}
+                    >
+                        re-open
+                    </div>
+
+                    <div style={{marginTop: '40px'}}>
+                        <AlertSection {...this.state.reopenAlert}/>
+                    </div>
+                </div>
+            );
+        } else if (StorageManager.getLoggedInUser().username === this.props.poll.owner) {
+            content =
+                (<a className="waves-effect waves-light btn modal-trigger" href="#finalizeModal"
+                    style={{backgroundColor: ColorTheme.accentColor, color: 'white'}}>
+                    FINALIZE
+                </a>)
+        } else {
+            content = <div style={{display:'none'}}></div>
+            marginTop = '0px';
+        }
+        return (
+            <div style={{marginTop: marginTop, fontWeight: 'bold'}}>
+                {content}
+                <FinalizationModal poll={this.props.poll}/>
             </div>
         );
-    } else if (StorageManager.getLoggedInUser().username === props.poll.owner) {
-        content =
-            (<a className="waves-effect waves-light btn modal-trigger" href="#finalizeModal"
-                style={{backgroundColor: ColorTheme.accentColor, color: 'white'}}>
-                FINALIZE
-            </a>)
-    } else {
-        content = <div style={{display:'none'}}></div>
-        marginTop = '0px';
     }
-    return (
-        <div style={{marginTop: marginTop, fontWeight: 'bold'}}>
-            {content}
-            <FinalizationModal poll={props.poll}/>
-        </div>
-    );
+
+    handleReopen = async () => {
+        console.log("at handleReopen: ");
+        console.log(this.props.poll);
+
+        let success = await API.reopen(this.props.poll);
+        console.log("api result: ", success);
+        console.log("history: ", this.context);
+        if (success) {
+            this.setState({reopenAlert: {type: "success", message: "poll reopened successfully."}});
+            setTimeout(
+                () => this.props.onRefresh(),
+                1000
+            );
+        } else {
+            this.setState({reOpenAlert: {type: "failure", message: "something went wrong!"}});
+        }
+    };
+
+    static contextType = HistoryContext;
 }
 
 
@@ -432,29 +491,52 @@ class FinalizationModal extends React.Component {
             <div id="finalizeModal" className="modal">
                 <div className="modal-content">
                     <h4 style={{color: 'black'}}>Choose the final result of the poll</h4>
-                    <div style={{marginTop: '100px'}}>
+                    <div style={{display: 'inline-block', marginTop: '100px'}}>
+                        <div style={{display: 'inline-block'}}>
+                            {VoteType.Yes.label}:<br/>
+                            {VoteType.No.label}:<br/>
+                            {VoteType.YesIfNecessary.label}:<br/>
+                        </div>
                         {
                             this.props.poll.options.map(option =>
-                                <span
-                                    style={{
-                                        color: 'white',
-                                        backgroundColor: this.state.selected === option ? ColorTheme.primaryColor: ColorTheme.passiveElement,
-                                        borderRadius: '7px',
-                                        padding: '7px', marginRight: '10px',
-                                        cursor: 'pointer',
-                                    }}
-                                    key={option.id}
-                                    onClick={() => this.handleClickOnOption(option)}
-                                >
-                                    {option.label}
-                                </span>
+                                <div style={{display: 'inline-block'}}>
+                                    <span
+                                        style={{
+                                            color: 'white',
+                                            backgroundColor: this.state.selected === option ? ColorTheme.primaryColor: ColorTheme.passiveElement,
+                                            borderRadius: '7px',
+                                            padding: '7px', marginRight: '10px',
+                                            cursor: 'pointer',
+                                        }}
+                                        key={option.id}
+                                        onClick={() => this.handleClickOnOption(option)}
+                                    >
+                                        {option.label}
+                                    </span>
+
+                                    <div style={{marginTop: '20px', fontSize: '90%'}}>
+                                        <div style={{color: 'green'}}>
+                                            <span>{this.countVoters(this.props.poll, option.id, VoteType.Yes)}</span>
+                                        </div>
+
+                                        <div style={{color: 'red'}}>
+                                            <span>{this.countVoters(this.props.poll, option.id, VoteType.No)}</span>
+                                        </div>
+
+                                        <div style={{color: 'yellow'}}>
+                                            <span>{this.countVoters(this.props.poll, option.id, VoteType.YesIfNecessary)}</span>
+                                        </div>
+
+                                    </div>
+
+                                </div>
                             )
                         }
                     </div>
-
+                    <br/>
                     <div
                         className="btn waves-effect waves-light"
-                        style={{marginTop: '100px', backgroundColor: ColorTheme.accentColor, color: 'white'}}
+                        style={{marginTop: '100px', backgroundColor: ColorTheme.accentColor, color: 'white', display: 'inline-block'}}
                         onClick={this.handleClickOnFinalize}
                     >
                         FINALIZE
@@ -467,6 +549,15 @@ class FinalizationModal extends React.Component {
                 </div>
             </div>
         );
+    }
+
+    countVoters(poll, optionId, voteType) {
+        let result = 0;
+        poll.participants.forEach(participant => {
+           if (participant.voted && participant.votes.find(vote => vote.optionId === optionId).voteType === voteType)
+               result++;
+        });
+        return result;
     }
 
     handleClickOnOption = (option) => {
@@ -489,6 +580,7 @@ class FinalizationModal extends React.Component {
             this.setState({alert: {type: "success", message: "poll finalized successfully."}});
             console.log(this.props.poll.id);
             setTimeout(() => {
+                this.setState({alert: null});
                 this.context.replace('/polls/' + this.props.poll.id);
             }, 1000);
         } else {

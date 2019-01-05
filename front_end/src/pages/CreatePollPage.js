@@ -19,6 +19,7 @@ class CreatePollPage extends React.Component {
             startDate: "",
             endDate: "",
             submitAlert: "",
+            perMeetingNotification: false,
         };
 
         this.handleFormInputChange = this.handleFormInputChange.bind(this);
@@ -81,6 +82,7 @@ class CreatePollPage extends React.Component {
             periodDays: this.state.periodDays,
             startDate: this.state.startDate,
             endDate: this.state.endDate,
+            perMeetingNotification: this.state.perMeetingNotification,
         };
 
         let success = await API.createPoll(poll);
@@ -123,7 +125,7 @@ class CreatePollPage extends React.Component {
                       <label for="startDate">start date</label>
                   </div>
 
-                  <div className="input-field" style={{width: '250px', marginTop: '30px'}}>
+                  <div className="input-field" style={{width: '250px', marginTop: '30px', marginBottom: '40px'}}>
                       <input
                           type="text" className="datepicker"
                           value={this.props.date}
@@ -132,10 +134,19 @@ class CreatePollPage extends React.Component {
                       <label for="endDate">end date</label>
                   </div>
 
+                  <label style={{marginTop: '30px'}}>
+                      <input type="checkbox" onClick={this.togglePerMeetingNotification}/>
+                      <span>should participants be notified for every meeting?</span>
+                  </label>
+
               </div>
           </div>
         );
     }
+
+    togglePerMeetingNotification = () => {
+        this.setState({perMeetingNotification: !this.state.perMeetingNotification});
+    };
 
     togglePeriodic = () => {
         let isPeriodic = !this.state.isPeriodic;
