@@ -38,9 +38,26 @@ class Polls():
 
     @staticmethod
     def get_involved_polls(username):
-        return ParticipantsVotes.objects.filter(user__username=username).values("event_poll__id", "event_poll__title",
+        participated_polls_query_set = ParticipantsVotes.objects.filter(user__username=username).values("event_poll__id", "event_poll__title",
                                                                                 "event_poll__description",
-                                                                                "event_poll__is_finalized").distinct()
+                                                                                "event_poll__is_finalized", "event_poll__finalized_option_id").distinct()
+        polls_list = list()
+        for i in range(participated_polls_query_set.count()):
+            if participated_polls_query_set[i]['event_poll__is_finalized'] == True:
+                finalized_option = Option.get_light_weight_options(participated_polls_query_set[i]['event_poll__finalized_option_id'])
+                print(participated_polls_query_set[i]['event_poll__finalized_option_id'])
+                print(finalized_option)
+                poll = participated_polls_query_set[i]
+                poll['finalizedOption'] = finalized_option
+                del poll['event_poll__finalized_option_id']
+                polls_list.append(poll)
+            else:
+                poll = participated_polls_query_set[i]
+                poll['finalizedOption'] = None
+                del poll['event_poll__finalized_option_id']
+                polls_list.append(poll)
+
+        return polls_list
 
     @staticmethod
     def create_poll(request_body):
