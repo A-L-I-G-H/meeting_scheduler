@@ -18,8 +18,23 @@ class Polls():
 
     @staticmethod
     def get_created_polls(username):
-        return EventPolls.objects.filter(creator__username= username).values("id", "title", "description",
-                                                                            "is_finalized")
+        owned_polls_query_set = EventPolls.objects.filter(creator__username= username).values("id", "title", "description",
+                                                                            "is_finalized", "finalized_option_id")
+        polls_list = list()
+        for i in range(owned_polls_query_set.count()):
+            if owned_polls_query_set[i]['is_finalized'] == True:
+                finalized_option = Option.get_light_weight_options(owned_polls_query_set[i]['finalized_option_id'])
+                poll = owned_polls_query_set[i]
+                poll['finalizedOption'] = finalized_option
+                del poll['finalized_option_id']
+                polls_list.append(poll)
+            else:
+                poll = owned_polls_query_set[i]
+                poll['finalizedOption'] = None
+                del poll['finalized_option_id']
+                polls_list.append(poll)
+
+        return polls_list
 
     @staticmethod
     def get_involved_polls(username):

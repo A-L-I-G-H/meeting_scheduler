@@ -10,5 +10,5 @@ class GetCreatedPollsView(View):
         request_body = get_request_body(request)
         owned_polls = Polls.get_created_polls(request_body['username'])
 
-        return JsonResponse({'data': list(owned_polls)}, content_type="application/json")
+        return JsonResponse(owned_polls, safe=False, content_type="application/json")
 
