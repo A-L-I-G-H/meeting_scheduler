@@ -269,19 +269,24 @@ class VotingModal extends React.Component {
     constructor(props) {
         super(props);
 
-        const selected = {};
+        let selected = {}, warnings = {};
         this.props.poll.options.forEach(option => {
             if (props.participant.voted) {
                 selected[option.id] = props.participant.votes.find(vote => vote.optionId === option.id).voteType;
             } else {
                 selected[option.id] = null;
             }
+            warnings[option.id] = [];
         });
 
         this.state = {
             selected: selected,
+            warnings: warnings,
             alert: null,
         };
+
+        console.log("warnings:", this.state.warnings);
+
 
     }
 
@@ -293,7 +298,7 @@ class VotingModal extends React.Component {
                     <div style={{marginTop: '100px'}} className="container">
                     {
                         this.props.poll.options.map(option =>
-                            <PollOption key={option.id} {...option} onClick={this.handleClickOnOptionVote} selectedVoteType={this.state.selected[option.id]}/>
+                            <PollOption key={option.id} {...option} warnings={this.state.warnings[option.id]} onClick={this.handleClickOnVoteOption} selectedVoteType={this.state.selected[option.id]}/>
                         )
                     }
                     </div>
@@ -315,15 +320,33 @@ class VotingModal extends React.Component {
         );
     }
 
-    handleClickOnOptionVote = (optionId, voteType) => {
-        let newSelected;
-        if (this.state.selected[optionId] === voteType) {
+    //TODO: refactor
+    handleClickOnVoteOption = (optionId, voteTypeEnum) => {
+        let newSelected, newWarnings;
+        if (this.state.selected[optionId] === voteTypeEnum) {
             newSelected = Object.assign({}, this.state.selected);
             newSelected[optionId] = null;
+            newWarnings = Object.assign({}, this.state.warnings);
+            newWarnings[optionId] = [];
+            this.setState({selected: newSelected, warnings: newWarnings});
         } else {
-            newSelected = Object.assign(this.state.selected, {[optionId]: voteType});
+            newSelected = Object.assign(this.state.selected, {[optionId]: voteTypeEnum});
+            this.setState({selected: newSelected});
+
+            if (voteTypeEnum === VoteType.Yes.enum || voteTypeEnum === VoteType.YesIfNecessary.enum) {
+                let option = this.props.poll.options.find(poll => poll.id === optionId);
+                API.checkCollision(option).then(collisions => {
+                    let newWarnings = Object.assign({}, this.state.warnings);
+                    newWarnings[option.id] = collisions;
+                    this.setState({warnings: newWarnings});
+                });
+            } else {
+                newWarnings = Object.assign({}, this.state.warnings);
+                newWarnings[optionId] = [];
+                this.setState({warnings: newWarnings});
+            }
         }
-        this.setState({selected: newSelected});
+
     };
 
     handleClickOnVote = async () => {
@@ -361,20 +384,20 @@ class PollOption extends React.Component {
 
     render() {
         return (
-            <span style={{display: 'inline-block', marginRight: '40px', marginTop: '40px', paddingLeft: 'auto', paddingRight: 'auto'}}>
-            <div
-                style={{
-                    color: 'white',
-                    backgroundColor: ColorTheme.primaryColor,
-                    borderRadius: '7px',
-                    padding: '7px',
-                    width: '160px',
-                    display: 'inline-block',
-                }}
-                key={this.props.id}
-            >
-                {this.props.label}
-            </div>
+            <span style={{display: 'inline-block', verticalAlign: 'top', marginRight: '40px', marginTop: '40px', paddingLeft: 'auto', paddingRight: 'auto'}}>
+                <div
+                    style={{
+                        color: 'white',
+                        backgroundColor: ColorTheme.primaryColor,
+                        borderRadius: '7px',
+                        padding: '7px',
+                        width: '160px',
+                        display: 'inline-block',
+                    }}
+                    key={this.props.id}
+                >
+                    {this.props.label}
+                </div>
 
                 {
                     VoteType.getAll().map(voteType => (
@@ -393,6 +416,11 @@ class PollOption extends React.Component {
                             {voteType.label}
                         </div>
                     ))
+                }
+                {
+                    this.props.warnings.map(warning => (
+                        <div style={{marginTop: '20px', color: 'red', width: '160px'}}>collision with {warning.optionLabel} of {warning.pollTitle}</div>)
+                    )
                 }
         </span>
         )

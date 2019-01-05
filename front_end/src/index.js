@@ -15,7 +15,6 @@ import CreatePollPage from './pages/CreatePollPage';
 class App extends React.Component {
     constructor(props) {
         super(props);
-
         M.AutoInit();
     }
 

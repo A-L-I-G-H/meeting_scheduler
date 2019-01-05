@@ -73,10 +73,16 @@ let poll4 = {
 };
 
 let myPolls = [poll1, poll2];
-
 let involvedPolls = [poll3, poll1, poll4];
-
 let allPolls = [poll1, poll2, poll3, poll4];
+
+let collisions = [
+    [],
+    [{optionLabel: 'wednesday 6:00', pollTitle: 'DM delivery'}],
+    [],
+    [{optionLabel: 'tuesday 9:00', pollTitle: 'ACM session'}, {optionLabel: 'tuesday 7:00', pollTitle: 'DM delivery'}],
+];
+
 
 let commentIdCounter = 10;
 
@@ -152,19 +158,21 @@ class Api {
     }
 
     reopen(poll) {
-        console.log("poll passed is:");
-        console.log(poll);
         let mockPoll = allPolls.find(each => each.id === poll.id);
-        console.log("mockPoll:", mockPoll);
 
         mockPoll.isFinalized = false;
         delete mockPoll.finalizedOptionId;
 
-        console.log("mockPoll after change:");
-        console.log(mockPoll);
-
         return new Promise(resolve => {
            setTimeout(() => resolve(true), 1000);
+        });
+    }
+
+    checkCollision(option) {
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve(collisions[option.id])
+            }, 500);
         });
     }
 
