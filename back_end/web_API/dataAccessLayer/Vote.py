@@ -9,7 +9,8 @@ class Vote:
                                                         user__username= vote_info['username'],
                                                         event_poll__is_finalized= False)
 
-
+        if(len(vote_objects) == 0):
+            return {"OK": False}
 
         print(vote_objects)
         for vote in vote_info['votes']:
