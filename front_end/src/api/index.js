@@ -1,5 +1,6 @@
 import {VoteType} from "../globals";
-const fetch = require('node-fetch');
+import fetch from 'node-fetch';
+const {URLSearchParams} = require('url');
 
 let poll1 = {
     id: 1,
@@ -92,7 +93,7 @@ class Api {
     createPoll(poll) {
         console.log("sending request to /createPoll with : ");
         console.log(poll);
-        fetch(this.prefix + "/createPoll", {method: 'POST', body: poll});
+        fetch(this.prefix + "/createPoll", {method: 'POST'});
     }
 
     getMyPolls() {
@@ -104,13 +105,17 @@ class Api {
     }
 
     async getPoll(id) {
-        console.log("get poll from api called:");
-        let allPolls = myPolls.concat(involvedPolls);
-        return new Promise((resolve, reject) => {
-           setTimeout(() => {
-               resolve(allPolls.find(poll => poll.id === id));
-           }, 1000);
-        });
+        // let allPolls = myPolls.concat(involvedPolls);
+
+        // return new Promise((resolve, reject) => {
+        //    setTimeout(() => {
+        //        resolve(allPolls.find(poll => poll.id === id));
+        //    }, 1000);
+        // });
+
+        return fetch(this.prefix + "/polls?id=" + id)
+            .then(result => result.json())
+            .then(json => console.log("json:", json));
     }
 
     finalize(poll, optionId) {

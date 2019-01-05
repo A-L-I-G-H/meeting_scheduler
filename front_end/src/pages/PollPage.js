@@ -75,7 +75,7 @@ class PollPage extends React.Component {
             );
         } else {
             return (
-                <div style={{width: '100%', textAlign: 'center'}}>
+                <div style={{marginTop: '200px', width: '100%', textAlign: 'center'}}>
                     Loading ...
                 </div>
             )
@@ -136,8 +136,11 @@ class PollPage extends React.Component {
     };
 
     fetchPoll = () => {
+        console.log("fetch poll");
         const pollId = parseInt(this.props.match.params.id);
         API.getPoll(pollId).then(poll => {
+            console.log("the poll from api:");
+            console.log(poll);
             this.setState({poll: poll});
         });
     };
