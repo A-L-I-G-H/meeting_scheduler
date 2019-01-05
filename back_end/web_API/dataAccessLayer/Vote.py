@@ -10,7 +10,7 @@ class Vote:
                                                         event_poll__is_finalized= False)
 
         if(len(vote_objects) == 0):
-            return {"OK": False}
+            return {"ok": False}
 
         print(vote_objects)
         for vote in vote_info['votes']:
@@ -18,4 +18,4 @@ class Vote:
             vote_object.vote_type = vote['voteType']
             vote_object.save()
 
-        return {"OK": True}
+        return {"ok": True}

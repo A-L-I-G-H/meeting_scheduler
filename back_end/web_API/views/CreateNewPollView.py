@@ -8,4 +8,4 @@ class CreateNewPollView(View):
         request_body = get_request_body(request)
         result = Polls.create_poll(request_body)
 
-        return JsonResponse(result, content_type="application/json")
+        return JsonResponse(result, safe=False, content_type="application/json")

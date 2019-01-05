@@ -17,7 +17,7 @@ class Polls():
         email_list = ParticipantsVotes.objects.filter(event_poll=poll).values_list("user__email", flat=True)
         EmailService.send_email_to_users("reopened", "reopened", email_list)
 
-        return {"OK": True}
+        return {"ok": True}
 
     @staticmethod
     def get_poll(id):
@@ -46,22 +46,39 @@ class Polls():
 
         return polls_list
 
-    @staticmethod
     def get_involved_polls(username):
-        return ParticipantsVotes.objects.filter(user__username=username).values("event_poll__id", "event_poll__title",
+        participated_polls_query_set = ParticipantsVotes.objects.filter(user__username=username).values("event_poll__id", "event_poll__title",
                                                                                 "event_poll__description",
-                                                                                "event_poll__is_finalized").distinct()
+                                                                                "event_poll__is_finalized", "event_poll__finalized_option_id").distinct()
+        polls_list = list()
+        for i in range(participated_polls_query_set.count()):
+            if participated_polls_query_set[i]['event_poll__is_finalized'] == True:
+                finalized_option = Option.get_light_weight_options(participated_polls_query_set[i]['event_poll__finalized_option_id'])
+                print(participated_polls_query_set[i]['event_poll__finalized_option_id'])
+                print(finalized_option)
+                poll = participated_polls_query_set[i]
+                poll['finalizedOption'] = finalized_option
+                del poll['event_poll__finalized_option_id']
+                polls_list.append(poll)
+            else:
+                poll = participated_polls_query_set[i]
+                poll['finalizedOption'] = None
+                del poll['event_poll__finalized_option_id']
+                polls_list.append(poll)
+
+        return polls_list
 
     @staticmethod
     def create_poll(request_body):
         user = User.objects.filter(username = request_body['username'])[0]
 
-        new_poll = EventPolls(creator = user, is_finalized= False, title= request_body['title'], description= request_body['description'])
+        new_poll = EventPolls(creator = user, is_finalized= False, title= request_body['poll']['title'], description= request_body['poll']['description'])
         new_poll.save()
 
-        EmailService.send_email_to_these_usernames('new', 'new', request_body['participants'])
+        EmailService.send_email_to_these_usernames('new', 'new', request_body['poll']['participants'])
 
-        Polls.create_options(new_poll, request_body['options'], request_body['participants'])
+        Polls.create_options(new_poll, request_body['poll']['options'], request_body['poll']['participants'])
+        return {"ok":True}
 
 
     @staticmethod
@@ -90,3 +107,4 @@ class Polls():
         email_list = ParticipantsVotes.objects.filter(event_poll = poll).values_list("user__email", flat = True)
         print(email_list)
         EmailService.send_email_to_users('fin', 'fin', email_list)
+        return {"ok":True}

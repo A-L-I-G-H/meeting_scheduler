@@ -18,7 +18,7 @@ class Comment():
         comment = fields['comment']
         user = User.objects.filter(username= fields['username'])[0]
         option = Options.objects.filter(id= comment['commentedOnId'])[0]
-        if(comment['isReply'] == "False") :
+        if(not comment['isReply'] ) :
             comment['repliedToId'] = None
 
         new_comment = Comments(user= user, option= option, text= comment['content'], reply_id= comment['repliedToId'])

@@ -9,4 +9,4 @@ class AddCommentView(View):
         request_body = get_request_body(request)
         comment_id = Comment.add_comment(request_body)
 
-        return JsonResponse({"OK": "True", "createdCommentId": comment_id}, content_type="application/json")
+        return JsonResponse({"ok": True, "createdCommentId": comment_id}, content_type="application/json")
