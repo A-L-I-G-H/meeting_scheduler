@@ -320,33 +320,42 @@ class VotingModal extends React.Component {
         );
     }
 
-    //TODO: refactor
     handleClickOnVoteOption = (optionId, voteTypeEnum) => {
-        let newSelected, newWarnings;
-        if (this.state.selected[optionId] === voteTypeEnum) {
+        this.handleWarningsOnVoteOptionClick(optionId, voteTypeEnum);
+        this.handleSelectedOnVoteOptionClick(optionId, voteTypeEnum);
+    };
+
+    handleSelectedOnVoteOptionClick = (optionId, voteTypeEnum) => {
+        let voteIsDeselected = this.state.selected[optionId] === voteTypeEnum;
+        let newSelected;
+
+        if (voteIsDeselected) {
             newSelected = Object.assign({}, this.state.selected);
             newSelected[optionId] = null;
-            newWarnings = Object.assign({}, this.state.warnings);
-            newWarnings[optionId] = [];
-            this.setState({selected: newSelected, warnings: newWarnings});
         } else {
             newSelected = Object.assign(this.state.selected, {[optionId]: voteTypeEnum});
-            this.setState({selected: newSelected});
-
-            if (voteTypeEnum === VoteType.Yes.enum || voteTypeEnum === VoteType.YesIfNecessary.enum) {
-                let option = this.props.poll.options.find(poll => poll.id === optionId);
-                API.checkCollision(option).then(collisions => {
-                    let newWarnings = Object.assign({}, this.state.warnings);
-                    newWarnings[option.id] = collisions;
-                    this.setState({warnings: newWarnings});
-                });
-            } else {
-                newWarnings = Object.assign({}, this.state.warnings);
-                newWarnings[optionId] = [];
-                this.setState({warnings: newWarnings});
-            }
         }
+        this.setState({selected: newSelected});
+    };
 
+    handleWarningsOnVoteOptionClick = (optionId, voteTypeEnum) => {
+        console.log("handle warnings");
+        let voteIsDeselected = this.state.selected[optionId] === voteTypeEnum;
+        let noIsSelected = !voteIsDeselected && voteTypeEnum === VoteType.No.enum;
+        console.log(voteIsDeselected, noIsSelected);
+        if (voteIsDeselected || noIsSelected) {
+            let newWarnings = Object.assign({}, this.state.warnings);
+            newWarnings[optionId] = [];
+            this.setState({warnings: newWarnings});
+        } else {
+            console.log("going to check warnings");
+            let option = this.props.poll.options.find(poll => poll.id === optionId);
+            API.checkCollision(option).then(collisions => {
+                let newWarnings = Object.assign({}, this.state.warnings);
+                newWarnings[option.id] = collisions;
+                this.setState({warnings: newWarnings});
+            });
+        }
     };
 
     handleClickOnVote = async () => {
