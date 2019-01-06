@@ -18,7 +18,12 @@ class TestCreatePoll(TestCase):
         request_body_poll['title'] = 'test title'
         request_body_poll['description'] = 'test description'
         request_body_poll['participants'] = ['test user']
-        request_body_poll['options'] = [{'label': 'test label', 'datetime': '2015-02-05T11:24:23Z'}]
+        request_body_poll['options'] = [{'label':'test label', 'time': { 'startDate': '2019-02-13T12:00:00Z',
+            'endDate': '2019-02-13T12:10:00Z'}}]
+        request_body_poll['isPeriodic']= True
+        request_body_poll['periodDays']= 7
+        request_body_poll['startDate']= '2019-01-10T12:00:00Z'
+        request_body_poll['endDate']= '2019-01-10T12:00:02Z'
         self.request_body['poll'] = request_body_poll
 
 
