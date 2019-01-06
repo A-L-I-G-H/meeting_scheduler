@@ -99,18 +99,16 @@ class PollPage extends React.Component {
                     {participant.voted ? "change vote" : "vote"}
                 </a>
 
-                <VotingModal poll={this.state.poll} participant={participant}/>
+                <VotingModal poll={this.state.poll} participant={participant} onRefresh={this.fetchPoll}/>
             </div>
             )
         );
     }
 
     handleNewComment = (comment) => {
-        console.log("handle new comment called", comment);
         let newPoll = Object.assign({}, this.state.poll);
         let option = newPoll.options.find(option => option.id === comment.commentedOnId);
         option.comments.push(comment);
-        console.log("new poll:",newPoll);
         this.setState({poll: newPoll, visibleCommentingBoxId: null, postingAlert: null});
     };
 
@@ -256,7 +254,7 @@ class CommentsColumn extends React.Component {
 
     handlePost = async (comment) => {
         let success, newId;
-        [success, newId] = await API.post(comment);
+        [success, newId] = await API.post(StorageManager.getLoggedInUser().username, comment);
         comment.id = newId;
         if (success) {
             this.setState({postingAlert: null, visibleCommentingBoxId: null, currentCommentContent: ""});
@@ -378,6 +376,7 @@ class VotingModal extends React.Component {
             this.setState({alert: {type: "success", message: "your vote was successfully recorded."}});
             setTimeout(() => {
                 this.setState({alert: null});
+                this.props.onRefresh();
                 this.context.replace('/polls/' + this.props.poll.id);
             }, 1000);
         } else {
@@ -490,7 +489,7 @@ class FinalizationSection extends React.Component {
         return (
             <div style={{marginTop: marginTop, fontWeight: 'bold'}}>
                 {content}
-                <FinalizationModal poll={this.props.poll}/>
+                <FinalizationModal poll={this.props.poll} onRefresh={this.props.onRefresh}/>
             </div>
         );
     }
@@ -499,7 +498,7 @@ class FinalizationSection extends React.Component {
         console.log("at handleReopen: ");
         console.log(this.props.poll);
 
-        let success = await API.reopen(this.props.poll);
+        let success = await API.reopen(StorageManager.getLoggedInUser().username, this.props.poll);
         console.log("api result: ", success);
         console.log("history: ", this.context);
         if (success) {
@@ -615,13 +614,14 @@ class FinalizationModal extends React.Component {
             return;
         }
 
-        let success = await API.finalize(this.props.poll, this.state.selected.id);
+        let success = await API.finalize(this.props.poll, this.state.selected.id, StorageManager.getLoggedInUser().username);
         if (success) {
             this.setState({alert: {type: "success", message: "poll finalized successfully."}});
             console.log(this.props.poll.id);
             setTimeout(() => {
                 this.setState({alert: null});
                 this.context.replace('/polls/' + this.props.poll.id);
+                this.props.onRefresh();
             }, 1000);
         } else {
             this.setState({alert: {type: "failure", message: "unable to finalize poll."}});

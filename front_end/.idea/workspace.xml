@@ -18,7 +18,7 @@
         <entry file="file://$PROJECT_DIR$/src/index.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="680">
-              <caret line="20" column="14" lean-forward="false" selection-start-line="20" selection-start-column="14" selection-end-line="20" selection-end-column="14" />
+              <caret line="42" column="76" lean-forward="true" selection-start-line="42" selection-start-column="76" selection-end-line="42" selection-end-column="76" />
               <folding>
                 <element signature="e#0#26#0" expanded="true" />
               </folding>
@@ -26,11 +26,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ChronusPage.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="ChronusPage.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/pages/ChronusPage.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2040">
-              <caret line="60" column="34" lean-forward="false" selection-start-line="60" selection-start-column="34" selection-end-line="60" selection-end-column="34" />
+            <state relative-caret-position="724">
+              <caret line="55" column="0" lean-forward="true" selection-start-line="55" selection-start-column="0" selection-end-line="55" selection-end-column="0" />
               <folding>
                 <element signature="e#0#26#0" expanded="true" />
               </folding>
@@ -41,8 +41,8 @@
       <file leaf-file-name="CreatePollPage.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/pages/CreatePollPage.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1700">
-              <caret line="50" column="39" lean-forward="true" selection-start-line="50" selection-start-column="39" selection-end-line="50" selection-end-column="39" />
+            <state relative-caret-position="604">
+              <caret line="260" column="7" lean-forward="false" selection-start-line="260" selection-start-column="7" selection-end-line="260" selection-end-column="7" />
               <folding>
                 <element signature="e#0#26#0" expanded="true" />
               </folding>
@@ -53,8 +53,8 @@
       <file leaf-file-name="PollPage.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/pages/PollPage.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4760">
-              <caret line="140" column="17" lean-forward="true" selection-start-line="140" selection-start-column="17" selection-end-line="140" selection-end-column="17" />
+            <state relative-caret-position="1896">
+              <caret line="511" column="9" lean-forward="true" selection-start-line="511" selection-start-column="9" selection-end-line="511" selection-end-column="9" />
               <folding>
                 <element signature="e#0#32#0" expanded="true" />
               </folding>
@@ -72,11 +72,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/api/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1602">
-              <caret line="287" column="0" lean-forward="true" selection-start-line="287" selection-start-column="0" selection-end-line="287" selection-end-column="0" />
+            <state relative-caret-position="1676">
+              <caret line="151" column="23" lean-forward="false" selection-start-line="151" selection-start-column="23" selection-end-line="151" selection-end-column="23" />
               <folding>
                 <element signature="e#0#36#0" expanded="true" />
               </folding>
@@ -87,8 +87,8 @@
       <file leaf-file-name="APIPrettifier.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/api/APIPrettifier.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="986">
-              <caret line="29" column="0" lean-forward="true" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+            <state relative-caret-position="1098">
+              <caret line="46" column="22" lean-forward="true" selection-start-line="46" selection-start-column="22" selection-end-line="46" selection-end-column="22" />
               <folding />
             </state>
           </provider>
@@ -106,18 +106,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>FINALIZE</find>
-      <find>handleReOpen</find>
-      <find>handleReOp</find>
-      <find>re-open</find>
-      <find>handle reo</find>
-      <find>poll re</find>
-      <find>finalizeModal</find>
-      <find>reopenAlert</find>
-      <find>context</find>
-      <find>context.re</find>
-      <find>context.replace</find>
-      <find>handleRe</find>
       <find>reopen</find>
       <find>API.reopen</find>
       <find>handleReopen</find>
@@ -132,10 +120,22 @@
       <find>handleOptionChange</find>
       <find>=== Vote</find>
       <find>getPar</find>
-      <find>fetchPoll</find>
       <find>Loading ..</find>
       <find>fetch</find>
       <find>getPoll</find>
+      <find>finalize</find>
+      <find>fetchPoll</find>
+      <find>.replace</find>
+      <find>yyyy</find>
+      <find>participantsSection</find>
+      <find>handlePart</find>
+      <find>finalize(</find>
+      <find>&lt;VotingModal</find>
+      <find>comment</find>
+      <find>PUT</find>
+      <find>handle new</find>
+      <find>reOpen</find>
+      <find>NavBar</find>
     </findStrings>
     <replaceStrings>
       <replace>ColorTheme.secondaryColor</replace>
@@ -153,14 +153,14 @@
         <option value="$PROJECT_DIR$/src/index.css" />
         <option value="$PROJECT_DIR$/src/utility.js" />
         <option value="$PROJECT_DIR$/src/components/AlertSection.js" />
-        <option value="$PROJECT_DIR$/src/pages/ChronusPage.js" />
         <option value="$PROJECT_DIR$/src/index.js" />
-        <option value="$PROJECT_DIR$/src/pages/CreatePollPage.js" />
-        <option value="$PROJECT_DIR$/src/pages/PollPage.js" />
         <option value="$PROJECT_DIR$/src/api/verifiers.js" />
         <option value="$PROJECT_DIR$/src/api/APIVerifier.js" />
+        <option value="$PROJECT_DIR$/src/pages/CreatePollPage.js" />
         <option value="$PROJECT_DIR$/src/api/APIPrettifier.js" />
+        <option value="$PROJECT_DIR$/src/pages/PollPage.js" />
         <option value="$PROJECT_DIR$/src/api/index.js" />
+        <option value="$PROJECT_DIR$/src/pages/ChronusPage.js" />
       </list>
     </option>
   </component>
@@ -284,12 +284,12 @@
       <workItem from="1546078809311" duration="6898000" />
       <workItem from="1546367324906" duration="33585000" />
       <workItem from="1546618677838" duration="59203000" />
-      <workItem from="1546753939039" duration="44000" />
+      <workItem from="1546753939039" duration="10645000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="177629000" />
+    <option name="totallyTimeSpent" value="188230000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="130" y="-8" width="3710" height="2168" extended-state="6" />
@@ -646,10 +646,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/pages/ChronusPage.js">
+    <entry file="file://$PROJECT_DIR$/src/index.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2040">
-          <caret line="60" column="34" lean-forward="false" selection-start-line="60" selection-start-column="34" selection-end-line="60" selection-end-column="34" />
+        <state relative-caret-position="68">
+          <caret line="2" column="1" lean-forward="false" selection-start-line="2" selection-start-column="1" selection-end-line="2" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="680">
+          <caret line="42" column="76" lean-forward="true" selection-start-line="42" selection-start-column="76" selection-end-line="42" selection-end-column="76" />
           <folding>
             <element signature="e#0#26#0" expanded="true" />
           </folding>
@@ -658,55 +665,48 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/pages/CreatePollPage.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1700">
-          <caret line="50" column="39" lean-forward="true" selection-start-line="50" selection-start-column="39" selection-end-line="50" selection-end-column="39" />
+        <state relative-caret-position="604">
+          <caret line="260" column="7" lean-forward="false" selection-start-line="260" selection-start-column="7" selection-end-line="260" selection-end-column="7" />
           <folding>
             <element signature="e#0#26#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="680">
-          <caret line="20" column="14" lean-forward="false" selection-start-line="20" selection-start-column="14" selection-end-line="20" selection-end-column="14" />
-          <folding>
-            <element signature="e#0#26#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/index.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="2" column="1" lean-forward="false" selection-start-line="2" selection-start-column="1" selection-end-line="2" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pages/PollPage.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4760">
-          <caret line="140" column="17" lean-forward="true" selection-start-line="140" selection-start-column="17" selection-end-line="140" selection-end-column="17" />
-          <folding>
-            <element signature="e#0#32#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/api/APIPrettifier.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="986">
-          <caret line="29" column="0" lean-forward="true" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+        <state relative-caret-position="1098">
+          <caret line="46" column="22" lean-forward="true" selection-start-line="46" selection-start-column="22" selection-end-line="46" selection-end-column="22" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/PollPage.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1896">
+          <caret line="511" column="9" lean-forward="true" selection-start-line="511" selection-start-column="9" selection-end-line="511" selection-end-column="9" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/api/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1602">
-          <caret line="287" column="0" lean-forward="true" selection-start-line="287" selection-start-column="0" selection-end-line="287" selection-end-column="0" />
+        <state relative-caret-position="1676">
+          <caret line="151" column="23" lean-forward="false" selection-start-line="151" selection-start-column="23" selection-end-line="151" selection-end-column="23" />
           <folding>
             <element signature="e#0#36#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/ChronusPage.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="724">
+          <caret line="55" column="0" lean-forward="true" selection-start-line="55" selection-start-column="0" selection-end-line="55" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -96,7 +96,7 @@ class Api {
         url = this.prefix + url;
         console.log("fetching url: " + url + " with options: ", options);
         return fetch(url, options)
-            .then(result => {/*console.log("raw result is:", result);*/ return result.json();})
+            .then(result => {console.log("raw result is:", result); return result.json();})
             .then(json => {console.log("result body is:", json); return json;})
     }
 
@@ -113,85 +113,62 @@ class Api {
 
     getInvolvedPolls(username) {
         return this.enhancedFetch("/polls/involved", {method: 'POST', body: JSON.stringify({username: username})})
-            .then(APIPrettifier.prettifyInvolvedPoll);
+            .then(APIPrettifier.prettifyInvolvedPolls);
     }
 
     async getPoll(id) {
+        // console.log("ID BEING PASSED IS:" + id);
         return this.enhancedFetch("/polls?id=" + id)
             .then(APIPrettifier.prettifyGetPoll);
-
-        // let allPolls = myPolls.concat(involvedPolls);
-
-        // return new Promise((resolve, reject) => {
-        //    setTimeout(() => {
-        //        resolve(allPolls.find(poll => poll.id === id));
-        //    }, 1000);
-        // });
     }
 
-    finalize(poll, optionId) {
-        // let response = fetch(this.prefix + "/finalize/", {method: 'PUT', body: {id: poll.id}});
-
-        // let targetpoll = allPolls.find(searchedPoll => searchedPoll.id === poll.id);
-        // targetpoll.isFinalized = true;
-        // targetpoll.finalizedOptionId = optionId;
-        // return new Promise((resolve, reject) => {
-        //     setTimeout(() => {
-        //         resolve(true);
-        //     }, 1000);
-        // });
+    finalize(poll, optionId, username) {
+        return this.enhancedFetch("/polls/finalize", {method: 'POST', body: JSON.stringify({
+                username: username,
+                pollId: poll.id,
+                finalizeOptionId: optionId,
+        })});
     }
 
     vote(username, pollId, votes) {
-        let poll = allPolls.find(poll => poll.id === pollId);
-        let participant = poll.participants.find(participant => participant.username === username);
-        participant.voted = true;
-        participant.votes = votes;
-        console.log("setting votes to:");
-        console.log(votes);
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                resolve(true, );
-            }, 500);
-        });
+        return this.enhancedFetch("/votes", {method: 'POST', body: JSON.stringify({
+                username: username,
+                pollId: pollId,
+                votes: votes,
+        })});
     }
 
 
     createPoll(creatorUsername, poll) {
-        return new Promise((resolve, reject) => {
-           setTimeout(() => {
-               resolve(true);
-           }, 1000);
+        return this.enhancedFetch("/polls/createPoll", {method: 'POST', body: JSON.stringify({
+                username: creatorUsername,
+                poll: poll,
+        })});
+    }
+
+    post(creatorUsername, comment) {
+        return this.enhancedFetch("/comments", {method: 'POST', body: JSON.stringify({
+                username: creatorUsername,
+                comment: comment,
+        })}).then(response => {
+            return [response.ok, response.createdCommentId];
         });
     }
 
-    post(comment) {
-        commentIdCounter++;
-        return new Promise(resolve => {
-            setTimeout(() => resolve([true, commentIdCounter]), 1000);
-        });
-    }
-
-    reopen(poll) {
-        let mockPoll = allPolls.find(each => each.id === poll.id);
-
-        mockPoll.isFinalized = false;
-        delete mockPoll.finalizedOptionId;
-
-        return new Promise(resolve => {
-           setTimeout(() => resolve(true), 1000);
-        });
+    reopen(reopenerUsername, poll) {
+        return this.enhancedFetch("/polls/reopen", {method: 'POST', body: JSON.stringify({
+                username: reopenerUsername,
+                pollId: poll.id,
+        })});
     }
 
     checkCollision(option) {
         return new Promise(resolve => {
             setTimeout(() => {
-                resolve(collisions[option.id])
+                resolve(collisions[1])
             }, 500);
         });
     }
-
-
 }
 
 class DummyApi {
@@ -222,8 +199,6 @@ class DummyApi {
     }
 
     finalize(poll, optionId) {
-        let response = fetch(this.prefix + "/finalize/", {method: 'PUT', body: {id: poll.id}});
-
         let targetpoll = allPolls.find(searchedPoll => searchedPoll.id === poll.id);
         targetpoll.isFinalized = true;
         targetpoll.finalizedOptionId = optionId;
@@ -282,8 +257,6 @@ class DummyApi {
             }, 500);
         });
     }
-
-
 }
 
 

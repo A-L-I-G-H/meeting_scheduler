@@ -4,6 +4,7 @@ import M from 'materialize-css';
 import {ColorTheme, HistoryContext} from "../globals";
 import API from '../api';
 import AlertSection from '../components/AlertSection'
+import StorageManager from "../StorageManager";
 
 class CreatePollPage extends React.Component {
     constructor(props) {
@@ -66,18 +67,20 @@ class CreatePollPage extends React.Component {
     handleSubmit = async () => {
 
         let options = this.state.options.map(option => {
-            let startDatetimeString = option.startDate + " " + option.startTime + ":00";
-            let startDatetime = new Date(startDatetimeString).getTime();
-            let endDatetimeString = option.endDate + " " + option.endTime + ":00";
-            let endDatetime = new Date(endDatetimeString).getTime();
-            return {label: option.label, time:{start: startDatetime, end: endDatetime}};
+            let startDatetimeString = option.startDate + "T" + option.startTime + ":00Z";
+            // let startDatetime = new Date(startDatetimeString).getTime();
+            let endDatetimeString = option.endDate + "T" + option.endTime + ":00Z";
+            // let endDatetime = new Date(endDatetimeString).getTime();
+            return {label: option.label, time:{startDate: startDatetimeString, endDate: endDatetimeString}};
         });
+
+        let participants = this.state.participants.map(participant => participant.username);
 
         let poll = {
             title: this.state.title,
             description: this.state.description,
             options: options,
-            participants: this.state.participants,
+            participants: participants,
             isPeriodic: this.state.isPeriodic,
             periodDays: this.state.periodDays,
             startDate: this.state.startDate,
@@ -85,7 +88,7 @@ class CreatePollPage extends React.Component {
             perMeetingNotification: this.state.perMeetingNotification,
         };
 
-        let success = await API.createPoll(poll);
+        let success = await API.createPoll(StorageManager.getLoggedInUser().username, poll);
 
         if (success) {
             this.setState({submitAlert: {type: "success", message: "poll created successfully."}});
@@ -180,7 +183,7 @@ class CreatePollPage extends React.Component {
 
                 {
                     this.state.participants.map((participant, index) => (
-                        <Participant {...participant} onChange={() => this.handleParticipantChange.bind(this, index)}/>
+                        <Participant {...participant} onChange={this.handleParticipantChange.bind(this, index)}/>
                     ))
                 }
             </div>
@@ -264,7 +267,7 @@ class CreatePollPage extends React.Component {
     }
 
     initializeMaterializeElements() {
-        M.Datepicker.init(document.querySelectorAll('.datepicker'), {format: 'mm/dd/yyyy'});
+        M.Datepicker.init(document.querySelectorAll('.datepicker'), {format: 'yyyy-mm-dd'});
         M.Timepicker.init(document.querySelectorAll('.timepicker'), {twelveHour: false});
     }
 
