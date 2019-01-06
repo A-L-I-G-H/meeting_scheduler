@@ -155,10 +155,11 @@ class Api {
         });
     }
 
-    reopen(reopenerUsername, poll) {
+    reopen(reopenerUsername, poll, notificationMessage) {
         return this.enhancedFetch("/polls/reopen", {method: 'POST', body: JSON.stringify({
                 username: reopenerUsername,
                 pollId: poll.id,
+                notificationMessage: notificationMessage,
         })});
     }
 

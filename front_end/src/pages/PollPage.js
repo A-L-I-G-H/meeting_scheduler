@@ -441,10 +441,6 @@ class PollOption extends React.Component {
 class FinalizationSection extends React.Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-            reopenAlert: null,
-        }
     }
 
     render() {
@@ -463,17 +459,19 @@ class FinalizationSection extends React.Component {
                         marginRight: '10px'
                     }}>{finalizedOption.label}</span>
                     <br/>
-                    <div
-                        className="waves-effect waves-effect waves-light btn"
-                        style={{backgroundColor:ColorTheme.accentColor , color: 'white', marginTop: '25px'}}
-                        onClick={this.handleReopen}
-                    >
-                        re-open
-                    </div>
 
-                    <div style={{marginTop: '40px'}}>
-                        <AlertSection {...this.state.reopenAlert}/>
-                    </div>
+
+                    <a href="#reopenModal" style={{color: 'white'}} className="modal-trigger">
+                        <div
+                            className="waves-effect waves-effect waves-light btn"
+                            style={{backgroundColor:ColorTheme.accentColor , color: 'white', marginTop: '25px'}}
+                        >
+                                re-open
+                        </div>
+                    </a>
+
+
+
                 </div>
             );
         } else if (StorageManager.getLoggedInUser().username === this.props.poll.owner) {
@@ -489,22 +487,74 @@ class FinalizationSection extends React.Component {
         return (
             <div style={{marginTop: marginTop, fontWeight: 'bold'}}>
                 {content}
+                <ReopenModal poll={this.props.poll} onRefresh={this.props.onRefresh}/>
                 <FinalizationModal poll={this.props.poll} onRefresh={this.props.onRefresh}/>
             </div>
         );
     }
 
-    handleReopen = async () => {
-        console.log("at handleReopen: ");
-        console.log(this.props.poll);
+    componentDidMount() {
+        var elems = document.querySelectorAll('.modal');
+        var instances = M.Modal.init(elems, {});
+    }
 
-        let success = await API.reopen(StorageManager.getLoggedInUser().username, this.props.poll);
-        console.log("api result: ", success);
-        console.log("history: ", this.context);
+
+
+
+
+
+    static contextType = HistoryContext;
+}
+
+class ReopenModal extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            notificationMessage: null,
+            reopenAlert: null,
+        };
+
+        this.defaultNotificationMessage = "The poll you've recently participated in has been re-opened.";
+    }
+
+    render() {
+        return (
+            <div id="reopenModal" className="modal">
+                <div className="modal-content">
+                    <div className="input-field">
+                        <textarea id="notificationMessage" class="materialize-textarea"
+                                  value={this.state.notificationMessage}/>
+                        <label for="notificationMessage">if you want to send a custom notification message, enter it here</label>
+                    </div>
+
+                    <div
+                        className="waves-effect waves-effect waves-light btn"
+                        style={{backgroundColor:ColorTheme.accentColor , color: 'white', marginTop: '10px'}}
+                        onClick={this.handleReopen}
+                    >
+                        re-open
+                    </div>
+
+                    <div style={{marginTop: '40px'}}>
+                        <AlertSection {...this.state.reopenAlert}/>
+                    </div>
+
+                </div>
+            </div>
+        );
+    }
+
+    handleReopen = async () => {
+        let success = await API.reopen(
+            StorageManager.getLoggedInUser().username,
+            this.props.poll,
+            this.state.notificationMessage === null ? this.defaultNotificationMessage : this.state.notificationMessage
+        );
         if (success) {
             this.setState({reopenAlert: {type: "success", message: "poll reopened successfully."}});
             setTimeout(
-                () => this.props.onRefresh(),
+                () => {this.props.onRefresh(); this.context.replace('/polls/' + this.props.poll.id)},
                 1000
             );
         } else {
