@@ -1,7 +1,7 @@
 from django.test import TestCase
 from web_API.dataAccessLayer.Comment import Comment
 
-class AddComment(TestCase):
+class TestComment(TestCase):
     fields = {}
 
     def setUp(self):
@@ -20,3 +20,4 @@ class AddComment(TestCase):
         comments = Comment.get_comments(1)
         comment = [c for c in comments if c['id'] == id]
         self.assertEqual(comment[0]['text'], 'hi')
+
