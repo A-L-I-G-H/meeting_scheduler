@@ -498,11 +498,6 @@ class FinalizationSection extends React.Component {
         var instances = M.Modal.init(elems, {});
     }
 
-
-
-
-
-
     static contextType = HistoryContext;
 }
 
@@ -524,7 +519,9 @@ class ReopenModal extends React.Component {
                 <div className="modal-content">
                     <div className="input-field">
                         <textarea id="notificationMessage" class="materialize-textarea"
-                                  value={this.state.notificationMessage}/>
+                                  value={this.state.notificationMessage}
+                                  onChange={(event) => this.setState({notificationMessage: event.target.value})}
+                        />
                         <label for="notificationMessage">if you want to send a custom notification message, enter it here</label>
                     </div>
 
