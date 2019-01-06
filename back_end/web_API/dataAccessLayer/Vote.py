@@ -4,7 +4,6 @@ class Vote:
 
     @staticmethod
     def vote(vote_info):
-        print(vote_info)
         vote_objects = ParticipantsVotes.objects.filter(event_poll__id= vote_info['pollId'],
                                                         user__username= vote_info['username'],
                                                         event_poll__is_finalized= False)
