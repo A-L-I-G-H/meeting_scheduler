@@ -1,6 +1,8 @@
 import {VoteType} from "../globals";
 import fetch from 'node-fetch';
-const {URLSearchParams} = require('url');
+import APIPrettifier from './APIPrettifier';
+const Bluebird = require('bluebird');
+fetch.Promise = Bluebird;
 
 let poll1 = {
     id: 1,
@@ -90,21 +92,34 @@ let commentIdCounter = 10;
 class Api {
     prefix = "http://localhost:8000";
 
+    enhancedFetch(url, options) {
+        url = this.prefix + url;
+        console.log("fetching url: " + url + " with options: ", options);
+        return fetch(url, options)
+            .then(result => {/*console.log("raw result is:", result);*/ return result.json();})
+            .then(json => {console.log("result body is:", json); return json;})
+    }
+
     createPoll(poll) {
         console.log("sending request to /createPoll with : ");
         console.log(poll);
         fetch(this.prefix + "/createPoll", {method: 'POST'});
     }
 
-    getMyPolls() {
-        return myPolls;
+    getMyPolls(username) {
+        return this.enhancedFetch("/polls/owner", {method: 'POST', body: JSON.stringify({username: username})})
+            .then(APIPrettifier.prettifyOwnerPolls);
     }
 
-    getInvolvedPolls() {
-        return involvedPolls;
+    getInvolvedPolls(username) {
+        return this.enhancedFetch("/polls/involved", {method: 'POST', body: JSON.stringify({username: username})})
+            .then(APIPrettifier.prettifyInvolvedPoll);
     }
 
     async getPoll(id) {
+        return this.enhancedFetch("/polls?id=" + id)
+            .then(APIPrettifier.prettifyGetPoll);
+
         // let allPolls = myPolls.concat(involvedPolls);
 
         // return new Promise((resolve, reject) => {
@@ -112,24 +127,19 @@ class Api {
         //        resolve(allPolls.find(poll => poll.id === id));
         //    }, 1000);
         // });
-
-        return fetch(this.prefix + "/polls?id=" + id)
-            .then(result => result.json())
-            .then(json => console.log("json:", json));
     }
 
     finalize(poll, optionId) {
         // let response = fetch(this.prefix + "/finalize/", {method: 'PUT', body: {id: poll.id}});
 
-        //temporary:
-        let targetpoll = allPolls.find(searchedPoll => searchedPoll.id === poll.id);
-        targetpoll.isFinalized = true;
-        targetpoll.finalizedOptionId = optionId;
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                resolve(true);
-            }, 1000);
-        });
+        // let targetpoll = allPolls.find(searchedPoll => searchedPoll.id === poll.id);
+        // targetpoll.isFinalized = true;
+        // targetpoll.finalizedOptionId = optionId;
+        // return new Promise((resolve, reject) => {
+        //     setTimeout(() => {
+        //         resolve(true);
+        //     }, 1000);
+        // });
     }
 
     vote(username, pollId, votes) {
@@ -170,6 +180,98 @@ class Api {
 
         return new Promise(resolve => {
            setTimeout(() => resolve(true), 1000);
+        });
+    }
+
+    checkCollision(option) {
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve(collisions[option.id])
+            }, 500);
+        });
+    }
+
+
+}
+
+class DummyApi {
+    prefix = "http://localhost:8000";
+
+    createPoll(poll) {
+        console.log("sending request to /createPoll with : ");
+        console.log(poll);
+        fetch(this.prefix + "/createPoll", {method: 'POST'});
+    }
+
+    getMyPolls(username) {
+        return new Promise(resolve => resolve(myPolls));
+    }
+
+    getInvolvedPolls(username) {
+        return new Promise(resolve => resolve(involvedPolls));
+    }
+
+    async getPoll(id) {
+        let allPolls = myPolls.concat(involvedPolls);
+
+        return new Promise((resolve, reject) => {
+           setTimeout(() => {
+               resolve(allPolls.find(poll => poll.id === id));
+           }, 1000);
+        });
+    }
+
+    finalize(poll, optionId) {
+        let response = fetch(this.prefix + "/finalize/", {method: 'PUT', body: {id: poll.id}});
+
+        let targetpoll = allPolls.find(searchedPoll => searchedPoll.id === poll.id);
+        targetpoll.isFinalized = true;
+        targetpoll.finalizedOptionId = optionId;
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve(true);
+            }, 1000);
+        });
+    }
+
+    vote(username, pollId, votes) {
+        let poll = allPolls.find(poll => poll.id === pollId);
+        let participant = poll.participants.find(participant => participant.username === username);
+        participant.voted = true;
+        participant.votes = votes;
+        console.log("setting votes to:");
+        console.log(votes);
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve(true, );
+            }, 500);
+        });
+    }
+
+
+    createPoll(creatorUsername, poll) {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve(true);
+            }, 1000);
+        });
+    }
+
+    post(comment) {
+        commentIdCounter++;
+        return new Promise(resolve => {
+            setTimeout(() => resolve([true, commentIdCounter]), 1000);
+        });
+    }
+
+    reopen(poll) {
+        let mockPoll = allPolls.find(each => each.id === poll.id);
+
+        mockPoll.isFinalized = false;
+        delete mockPoll.finalizedOptionId;
+
+        return new Promise(resolve => {
+            setTimeout(() => resolve(true), 1000);
         });
     }
 

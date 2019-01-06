@@ -39,8 +39,8 @@ class HomePage extends React.Component {
         return (
             <ChronusPage history={this.props.history}>
                 <div>
-                    <PollSection title="Your Polls" polls={API.getMyPolls()}/>
-                    <PollSection title="Involved Polls" polls={API.getInvolvedPolls()}/>
+                    <PollSection title="Your Polls" polls={API.getMyPolls(StorageManager.getLoggedInUser().username)}/>
+                    <PollSection title="Involved Polls" polls={API.getInvolvedPolls(StorageManager.getLoggedInUser().username)}/>
 
                     <AddButton
                         onClick={() => setTimeout(() => this.props.history.push('/createPoll'), 400)}
@@ -60,25 +60,44 @@ class HomePage extends React.Component {
 }
 
 class PollSection extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            polls: null,
+        };
+
+        props.polls.then(polls => this.setState({polls: polls}));
+    }
+
     static contextType = HistoryContext;
 
     render() {
-        return (
-            <div className="container">
+        if (this.state.polls !== null) {
+            return (
+                <div className="container">
 
-            <div className="row" style={{display: 'inline-block', marginRight: "20px"}}>
-                <h2 style={{fontSize: '20px'}}>{this.props.title}</h2>
-                <hr style={{color: ColorTheme.primaryColor}}/>
-            </div>
+                    <div className="row" style={{display: 'inline-block', marginRight: "20px"}}>
+                        <h2 style={{fontSize: '20px'}}>{this.props.title}</h2>
+                        <hr style={{color: ColorTheme.primaryColor}}/>
+                    </div>
 
-            {this.props.polls.map(poll => (
-                <div key={poll.id} className="row" style={{marginBottom: "-15px"}}>
-                    <Poll {...poll}/>
+                    {this.state.polls.map(poll => (
+                        <div key={poll.id} className="row" style={{marginBottom: "-15px"}}>
+                            <Poll {...poll}/>
+                        </div>
+                    ))}
+
                 </div>
-            ))}
+            )
+        } else {
+            return (
+                <div style={{marginTop: '200px', width: '100%', textAlign: 'center'}}>
+                    Loading ...
+                </div>
+            );
+        }
 
-            </div>
-        )
     }
 }
 
