@@ -287,5 +287,4 @@ class DummyApi {
 }
 
 
-
 export default new Api();
