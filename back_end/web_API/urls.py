@@ -10,4 +10,5 @@ urlpatterns = [
     path('votes', VoteView.as_view()),
     path('comments', AddCommentView.as_view()),
     path('polls/reopen', ReopenView.as_view()),
+    path('checkCollision', CollisionView.as_view()),
 ]
