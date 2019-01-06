@@ -163,23 +163,18 @@ class Polls():
 
     @staticmethod
     def checkCollision(username, startDate, endDate):
-        print('in check Collision')
         startDateTime = datetime.datetime.strptime(startDate, "%Y-%m-%dT%H:%M:%SZ")
         endDateTime = datetime.datetime.strptime(endDate, "%Y-%m-%dT%H:%M:%SZ")
-        print(startDateTime)
-        print(endDateTime)
-        print(type(startDateTime))
         result_list = list()
         user = User.objects.filter(username = username)[0]
         user_meetings = Participates.objects.filter(user = user)
         for participated_meeting in user_meetings:
             s_date = participated_meeting.meeting.startDate
             e_date = participated_meeting.meeting.endDate
-            print('hello')
-            print(startDateTime.tzinfo)
             if not startDateTime.tzinfo:
                 startDateTime = pytz.utc.localize(startDateTime) 
-            if e_date > startDateTime:
+                endDateTime = pytz.utc.localize(endDateTime)
+            if e_date > startDateTime or s_date < endDateTime:
                 obj = {
                     'pollTitle': participated_meeting.meeting.title,
                     'optionLabel': participated_meeting.meeting.label
