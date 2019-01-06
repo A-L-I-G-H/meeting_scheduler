@@ -164,16 +164,10 @@ class Api {
     }
 
     checkCollision(forUser, option) {
-        // return this.enhancedFetch("/checkCollision", {method: 'POST', body: JSON.stringify({
-        //         username: forUser,
-        //         timeToCheck: option.time
-        // })});
-
-        return new Promise(resolve => {
-            setTimeout(() => {
-                resolve(collisions[1])
-            }, 500);
-        });
+        return this.enhancedFetch("/checkCollision", {method: 'POST', body: JSON.stringify({
+                username: forUser,
+                timeToCheck: option.time
+        })}).then(response => response.data);
     }
 }
 

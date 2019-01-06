@@ -50,11 +50,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PollPage.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="PollPage.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/pages/PollPage.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="910">
-              <caret line="517" column="16" lean-forward="true" selection-start-line="517" selection-start-column="16" selection-end-line="517" selection-end-column="16" />
+            <state relative-caret-position="1080">
+              <caret line="350" column="24" lean-forward="false" selection-start-line="350" selection-start-column="24" selection-end-line="350" selection-end-column="24" />
               <folding>
                 <element signature="e#0#32#0" expanded="true" />
               </folding>
@@ -72,11 +72,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="index.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/api/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="604">
-              <caret line="157" column="8" lean-forward="false" selection-start-line="157" selection-start-column="8" selection-end-line="157" selection-end-column="8" />
+            <state relative-caret-position="740">
+              <caret line="169" column="45" lean-forward="false" selection-start-line="169" selection-start-column="45" selection-end-line="169" selection-end-column="45" />
               <folding>
                 <element signature="e#0#36#0" expanded="true" />
               </folding>
@@ -106,8 +106,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>fetch</find>
-      <find>getPoll</find>
       <find>finalize</find>
       <find>fetchPoll</find>
       <find>.replace</find>
@@ -136,6 +134,8 @@
       <find>handleReopen</find>
       <find>Reopn</find>
       <find>ReopenModal</find>
+      <find>checkColl</find>
+      <find>this.props.warning.map</find>
     </findStrings>
     <replaceStrings>
       <replace>ColorTheme.secondaryColor</replace>
@@ -159,8 +159,8 @@
         <option value="$PROJECT_DIR$/src/pages/CreatePollPage.js" />
         <option value="$PROJECT_DIR$/src/api/APIPrettifier.js" />
         <option value="$PROJECT_DIR$/src/pages/ChronusPage.js" />
-        <option value="$PROJECT_DIR$/src/api/index.js" />
         <option value="$PROJECT_DIR$/src/pages/PollPage.js" />
+        <option value="$PROJECT_DIR$/src/api/index.js" />
       </list>
     </option>
   </component>
@@ -284,12 +284,12 @@
       <workItem from="1546078809311" duration="6898000" />
       <workItem from="1546367324906" duration="33585000" />
       <workItem from="1546618677838" duration="59203000" />
-      <workItem from="1546753939039" duration="20372000" />
+      <workItem from="1546753939039" duration="21393000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="197957000" />
+    <option name="totallyTimeSpent" value="198978000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="130" y="-8" width="3710" height="2168" extended-state="6" />
@@ -691,22 +691,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/api/index.js">
+    <entry file="file://$PROJECT_DIR$/src/pages/PollPage.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="604">
-          <caret line="157" column="8" lean-forward="false" selection-start-line="157" selection-start-column="8" selection-end-line="157" selection-end-column="8" />
+        <state relative-caret-position="1080">
+          <caret line="350" column="24" lean-forward="false" selection-start-line="350" selection-start-column="24" selection-end-line="350" selection-end-column="24" />
           <folding>
-            <element signature="e#0#36#0" expanded="true" />
+            <element signature="e#0#32#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/pages/PollPage.js">
+    <entry file="file://$PROJECT_DIR$/src/api/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="910">
-          <caret line="517" column="16" lean-forward="true" selection-start-line="517" selection-start-column="16" selection-end-line="517" selection-end-column="16" />
+        <state relative-caret-position="740">
+          <caret line="169" column="45" lean-forward="false" selection-start-line="169" selection-start-column="45" selection-end-line="169" selection-end-column="45" />
           <folding>
-            <element signature="e#0#32#0" expanded="true" />
+            <element signature="e#0#36#0" expanded="true" />
           </folding>
         </state>
       </provider>

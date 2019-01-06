@@ -340,18 +340,16 @@ class VotingModal extends React.Component {
     };
 
     handleWarningsOnVoteOptionClick = (optionId, voteTypeEnum) => {
-        console.log("handle warnings");
         let voteIsDeselected = this.state.selected[optionId] === voteTypeEnum;
         let noIsSelected = !voteIsDeselected && voteTypeEnum === VoteType.No.enum;
-        console.log(voteIsDeselected, noIsSelected);
         if (voteIsDeselected || noIsSelected) {
             let newWarnings = Object.assign({}, this.state.warnings);
             newWarnings[optionId] = [];
             this.setState({warnings: newWarnings});
         } else {
-            console.log("going to check warnings");
             let option = this.props.poll.options.find(poll => poll.id === optionId);
             API.checkCollision(StorageManager.getLoggedInUser().username, option).then(collisions => {
+                console.log("collisions received from API is:",collisions);
                 let newWarnings = Object.assign({}, this.state.warnings);
                 newWarnings[option.id] = collisions;
                 this.setState({warnings: newWarnings});
@@ -360,7 +358,6 @@ class VotingModal extends React.Component {
     };
 
     handleClickOnVote = async () => {
-        console.log("handle vote called");
         let votes = [];
         for (let option of this.props.poll.options) {
             if (this.state.selected[option.id] === null) {
