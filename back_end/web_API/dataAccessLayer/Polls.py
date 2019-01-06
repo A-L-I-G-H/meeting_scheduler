@@ -16,7 +16,7 @@ class Polls():
         poll.save()
 
         email_list = ParticipantsVotes.objects.filter(event_poll=poll).values_list("user__email", flat=True)
-        EmailService.send_email_to_users("reopened", "reopened", email_list)
+        EmailService.send_email_to_users("بازگشایی نظرسنجی", "نظر سنجی که در آن شرکت کرده بودید دوباره قابل رای دادن شده است", email_list)
 
         return {"ok": True}
 
@@ -114,7 +114,7 @@ class Polls():
         new_poll.save()
         
 
-        EmailService.send_email_to_these_usernames('new', 'new', request_body['poll']['participants'])
+        EmailService.send_email_to_these_usernames('ایجاد نظر سنجی', 'یک نظر سنجی جدید که شما در آن عضو هستید ایجاد شده است', request_body['poll']['participants'])
 
         Polls.create_options(new_poll, request_body['poll']['options'], request_body['poll']['participants'])
         return {"ok":True,"id":new_poll.id}
@@ -144,5 +144,5 @@ class Polls():
         poll.save()
 
         email_list = ParticipantsVotes.objects.filter(event_poll = poll).values_list("user__email", flat = True)
-        EmailService.send_email_to_users('fin', 'fin', email_list)
+        EmailService.send_email_to_users('نهایی شدن نظر سنجی', 'نظرسنجی که در آن شرکت کرده اید نهایی شده است', email_list)
         return {"ok":True}
