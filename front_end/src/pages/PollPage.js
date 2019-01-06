@@ -351,7 +351,7 @@ class VotingModal extends React.Component {
         } else {
             console.log("going to check warnings");
             let option = this.props.poll.options.find(poll => poll.id === optionId);
-            API.checkCollision(option).then(collisions => {
+            API.checkCollision(StorageManager.getLoggedInUser().username, option).then(collisions => {
                 let newWarnings = Object.assign({}, this.state.warnings);
                 newWarnings[option.id] = collisions;
                 this.setState({warnings: newWarnings});

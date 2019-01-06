@@ -46,7 +46,7 @@ class NavBar extends React.Component {
             lineHeight: height + "px",
             color: 'white',
             paddingLeft: '20px',
-            paddingRight: '50px',
+            paddingRight: '20px',
             display: 'block',
             backgroundColor: ColorTheme.primaryColor,
             zIndex: 4,
@@ -57,15 +57,24 @@ class NavBar extends React.Component {
         return  (
             <div>
                 <nav style={style}>
-                    <div style={{textAlign: 'center', verticalAlign: 'middle' ,display: 'inline-block', backgroundColor: 'white', width: imgWidth + 15, height: imgHeight + 15, margin: 5, marginBottom: 10, borderRadius: '50%'}}>
+                    <div style={{textAlign: 'center', verticalAlign: 'middle' ,display: 'inline-block',
+                        backgroundColor: 'white', width: imgWidth + 15, height: imgHeight + 15, margin: 5, marginBottom: 10, borderRadius: '50%'}}>
                         <img src={require('./logo.png')} width={imgWidth} height={imgHeight} style={{verticalAlign: 'middle', marginTop: -20}}/>
                     </div>
                     <span style={{fontSize: '22px', fontWeight: "bold", marginLeft: "15px"}}>Chronus</span>
 
                     <span style={{display: 'inline-block', float: 'right', marginRight: '40px'}}>
+
                 {StorageManager.userIsLoggedIn() ?
-                    StorageManager.getLoggedInUser().username:
-                    "login"
+                    <span style={{fontWeight: 'bold'}}>
+                        <span>logout</span>
+                        <span style={{marginLeft: 20}}>{StorageManager.getLoggedInUser().username}</span>
+                    </span>
+                    :
+                    <span style={{fontWeight: 'bold'}}>
+                        <span>login</span>
+                        <span>sign up</span>
+                    </span>
                 }
                 </span>
 
