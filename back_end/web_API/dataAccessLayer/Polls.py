@@ -5,6 +5,11 @@ from web_API.emailService import EmailService
 from django.contrib.auth.models import User
 from web_API.models.Options import Options
 from web_API.dataAccessLayer.Option import Option
+from web_API.dataAccessLayer.Meeting import Meeting
+from web_API.dataAccessLayer.Users import Users
+from web_API.models.Participates import Participates
+import pytz
+import datetime 
 
 
 class Polls():
@@ -57,6 +62,11 @@ class Polls():
             user_votes_list.append(vote_option_dict)
             Participant_struct['votes'] = user_votes_list
         return result_list
+
+    @staticmethod
+    def get_participants_usernames(poll_id):
+        return ParticipantsVotes.objects.filter(event_poll = poll_id).values_list("user__username", flat=True).distinct()
+
 
     @staticmethod
     def get_periodic_meeting(poll_id):
@@ -143,6 +153,35 @@ class Polls():
         poll.finalized_option = Options.objects.filter(id = option_id)[0]
         poll.save()
 
+        usernames = Polls.get_participants_usernames(poll.id)
+        Users.join_meeting(Meeting.createMeeting(poll.title, poll.finalized_option.startDate, poll.finalized_option.endDate, poll.finalized_option.label) , usernames)
+
+
         email_list = ParticipantsVotes.objects.filter(event_poll = poll).values_list("user__email", flat = True)
         EmailService.send_email_to_users('fin', 'fin', email_list)
         return {"ok":True}
+
+    @staticmethod
+    def checkCollision(username, startDate, endDate):
+        print('in check Collision')
+        startDateTime = datetime.datetime.strptime(startDate, "%Y-%m-%dT%H:%M:%SZ")
+        endDateTime = datetime.datetime.strptime(endDate, "%Y-%m-%dT%H:%M:%SZ")
+        print(startDateTime)
+        print(endDateTime)
+        print(type(startDateTime))
+        result_list = list()
+        utc=pytz.UTC
+        user = User.objects.filter(username = username)[0]
+        user_meetings = Participates.objects.filter(user = user)
+        for participated_meeting in user_meetings:
+            s_date = participated_meeting.meeting.startDate
+            e_date = participated_meeting.meeting.endDate
+            startDateTime = utc.localize(startDateTime) 
+            if e_date > startDateTime:
+                obj = {
+                    'pollTitle': participated_meeting.meeting.title,
+                    'optionLabel': participated_meeting.meeting.label
+                }
+                result_list.append(obj)
+
+        return result_list
