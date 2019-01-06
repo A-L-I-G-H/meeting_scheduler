@@ -1,5 +1,6 @@
 from django.urls import path
 from web_API.views import *
+from web_API.views.CollisionView import CollisionView
 
 urlpatterns = [
     path('polls/', GetPollView.as_view()),
@@ -10,4 +11,5 @@ urlpatterns = [
     path('votes', VoteView.as_view()),
     path('comments', AddCommentView.as_view()),
     path('polls/reopen', ReopenView.as_view()),
+    path('checkCollision', CollisionView.as_view()),
 ]
