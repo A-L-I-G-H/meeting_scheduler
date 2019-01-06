@@ -6,7 +6,6 @@ from web_API.dataAccessLayer.Polls import Polls
 
 class CollisionView(View):
     def post(self, request):
-        # request_body = get_request_body(request)
-        # result = Polls.finalize(request_body['pollId'], request_body['finalizeOptionId'], request_body['username'])
-
-        return JsonResponse({'ok':True}, content_type="application/json")
+        request_body = get_request_body(request)
+        result = Polls.checkCollision(request_body['username'], request_body['timeToCheck']['startDate'], request_body['timeToCheck']['endDate'])
+        return JsonResponse({"data":result}, safe=False, content_type="application/json")

@@ -11,7 +11,6 @@ class Vote:
         if(len(vote_objects) == 0):
             return {"ok": False}
 
-        print(vote_objects)
         for vote in vote_info['votes']:
             vote_object = vote_objects.filter(option__id= vote['optionId'])[0]
             vote_object.vote_type = vote['voteType']
