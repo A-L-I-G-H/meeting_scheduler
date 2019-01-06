@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from web_API.models.Comments import Comments
 from web_API.models.Options import Options
 import datetime
+from web_API.models.EventPolls import EventPolls
 
 
 class Comment():
