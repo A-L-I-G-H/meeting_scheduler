@@ -7,14 +7,15 @@ from django.contrib.auth.models import User
 class TestComment(TestCase):
     new_user = User(username= 'test')
     new_poll = EventPolls(creator= new_user, title= 'test', description= 'test')
-    new_option = Options(event_poll= new_poll, label= 'test', date_time= "2015-02-05T11:24:23Z")
-
+    new_option = Options(event_poll=new_poll, label='test', startDate="2015-02-05T11:24:23Z",
+                              endDate="2015-02-05T11:24:25Z")
     def setUp(self):
         self.new_user = User(username='test')
         self.new_user.save()
         self.new_poll = EventPolls(creator= self.new_user, title='test', description='test')
         self.new_poll.save()
-        self.new_option = Options(event_poll=self.new_poll, label='test', date_time="2015-02-05T11:24:23Z")
+        self.new_option = Options(event_poll=self.new_poll, label='test', startDate="2015-02-05T11:24:23Z",
+                                  endDate= "2015-02-05T11:24:25Z")
         self.new_option.save()
 
 

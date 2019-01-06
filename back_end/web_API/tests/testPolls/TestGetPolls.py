@@ -15,7 +15,9 @@ class TestGetPolls(TestCase):
         self.new_user.save()
         self.new_poll = EventPolls(creator=self.new_user, title='test', description='test')
         self.new_poll.save()
-        self.new_option = Options(event_poll=self.new_poll, label='test', date_time="2015-02-05T11:24:23Z")
+        self.new_option = Options(event_poll=self.new_poll, label='test', startDate="2015-02-05T11:24:23Z"
+                                  , endDate="2015-02-05T11:24:23Z")
+
         self.new_option.save()
         self.new_participants_vote = ParticipantsVotes(user= self.new_user, event_poll= self.new_poll,
                                                        option= self.new_option)
