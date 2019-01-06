@@ -4,7 +4,7 @@ from web_API.models.Options import Options
 from web_API.models.EventPolls import EventPolls
 from django.contrib.auth.models import User
 
-class TestComment(TestCase):
+class TestOption(TestCase):
     new_user = User(username= 'test')
     new_poll = EventPolls(creator= new_user, title= 'test', description= 'test')
     new_option = Options(event_poll=new_poll, label='test', startDate="2015-02-05T11:24:23Z",
