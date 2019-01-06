@@ -5,7 +5,7 @@ from web_API.dataAccessLayer.Polls import Polls
 
 
 class FinalizePollView(View):
-    def put(self, request):
+    def post(self, request):
         request_body = get_request_body(request)
         result = Polls.finalize(request_body['pollId'], request_body['finalizeOptionId'], request_body['username'])
 
