@@ -1,5 +1,6 @@
 from web_API.models.EventPolls import EventPolls
 from web_API.models.ParticipantsVotes import ParticipantsVotes
+from web_API.models.PeriodicEventPolls import PeriodicEventPolls
 from web_API.emailService import EmailService
 from django.contrib.auth.models import User
 from web_API.models.Options import Options
@@ -24,7 +25,48 @@ class Polls():
         poll = EventPolls.objects.filter(id= id).values("id", "title", "description", "is_finalized", 'creator__username', "finalized_option_id")[0]
         options = Option.get_options(id)
         poll['options'] = options
+        participants_list = list(ParticipantsVotes.objects.filter(event_poll = id).values_list("user__username", flat = True).distinct())
+        poll['participants'] = participants_list
+        print(type(id))
+        poll['participants']=Polls.get_participants(id)
+        periodic = Polls.is_meeting_periodic(id)
+        print(type(periodic))
+        print(periodic)
+        if periodic == None:
+            poll['isPeriodic'] = False
+            poll['periodDays'] = None
+            poll['startDate'] = None
+            poll['endDate'] = None
+        else:
+            poll['isPeriodic'] = True
+            poll['periodDays'] = periodic[2]
+            poll['startDate'] = periodic[0]
+            poll['endDate'] = periodic[1]
         return poll
+
+    @staticmethod
+    def get_participants(poll_id):
+        participants_list = list(ParticipantsVotes.objects.filter(event_poll = poll_id).values_list("user__username", "voted", "option", "vote_type").order_by('user__username'))
+        result_list = list()
+        Participant_struct = {'username': None}
+        user_votes_list = list()
+        for participant_vote in participants_list:
+            if Participant_struct['username'] != participant_vote[0]:
+                result_list.append(Participant_struct)
+                del user_votes_list[:]
+            Participant_struct['username'] = participant_vote[0]
+            Participant_struct['voted'] = participant_vote[1]
+            vote_option_dict = {'optionId': participant_vote[2], 'voteType':participant_vote[3]}
+            user_votes_list.append(vote_option_dict)
+            Participant_struct['votes'] = user_votes_list
+        return result_list
+
+    @staticmethod
+    def is_meeting_periodic(poll_id):
+        result_poll = None
+        if PeriodicEventPolls.objects.filter(event_poll_id = poll_id).exists():
+            result_poll = PeriodicEventPolls.objects.filter(event_poll_id = poll_id).values_list('start_date', 'end_date', 'period')[0]
+        return result_poll
 
     @staticmethod
     def get_created_polls(username):
@@ -46,6 +88,7 @@ class Polls():
 
         return polls_list
 
+    @staticmethod
     def get_involved_polls(username):
         participated_polls_query_set = ParticipantsVotes.objects.filter(user__username=username).values("event_poll__id", "event_poll__title",
                                                                                 "event_poll__description",
