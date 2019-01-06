@@ -16,7 +16,7 @@ class Polls():
         poll.save()
 
         email_list = ParticipantsVotes.objects.filter(event_poll=poll).values_list("user__email", flat=True)
-        EmailService.send_email_to_users("بازگشایی نظرسنجی", "نظر سنجی که در آن شرکت کرده بودید دوباره قابل رای دادن شده است", email_list)
+        EmailService.send_email_to_users("بازگشایی نظرسنجی", fields['notificationMessage'], email_list)
 
         return {"ok": True}
 
