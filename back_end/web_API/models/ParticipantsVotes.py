@@ -15,6 +15,7 @@ class ParticipantsVotes(models.Model):
 
     event_poll = models.ForeignKey('EventPolls', on_delete = models.CASCADE)
     user = models.ForeignKey(User, on_delete = models.CASCADE)
+    voted = models.BooleanField(default=False)
     option = models.ForeignKey('Options', on_delete= models.CASCADE)
     vote_type = models.IntegerField(
         choices= VOTE_TYPE_CHOICES,
