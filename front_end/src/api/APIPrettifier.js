@@ -15,14 +15,43 @@ function renameProps(obj, renameList) {
 
 class APIPrettifier {
     prettifyGetPoll(poll) {
-        return renameProps(poll, [
+        let result = renameProps(poll, [
             ['creator__username', 'owner'],
             ['finalized_option_id', 'finalizedOptionId'],
             ['is_finalize', 'isFinalized'],
         ]);
+
+        result.options.forEach(option => {
+           option = renameProps(option, [
+              ['date_time', 'time']
+           ]);
+        });
     }
+
+    prettifyOwnerPolls(polls) {
+        console.log("prettifying", polls);
+        return polls.map(poll => (
+            renameProps(poll, [
+                ['is_finalized', 'isFinalized']
+            ])
+        ));
+    }
+
+    prettifyInvolvedPoll(poll) {
+        return renameProps(poll, [
+            ['event_poll__id', 'id'],
+            ['event_poll_title', 'title'],
+            ['event_poll_description', 'description'],
+            ['event_poll_is_finalized', 'isFinalized'],
+        ]);
+    }
+
+
+
+
+
 }
 
 
-
+export default new APIPrettifier();
 

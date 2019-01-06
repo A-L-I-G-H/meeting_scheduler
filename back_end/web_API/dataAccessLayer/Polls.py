@@ -27,11 +27,8 @@ class Polls():
         poll['options'] = options
         participants_list = list(ParticipantsVotes.objects.filter(event_poll = id).values_list("user__username", flat = True).distinct())
         poll['participants'] = participants_list
-        print(type(id))
         poll['participants']=Polls.get_participants(id)
-        periodic = Polls.is_meeting_periodic(id)
-        print(type(periodic))
-        print(periodic)
+        periodic = Polls.get_periodic_meeting(id)
         if periodic == None:
             poll['isPeriodic'] = False
             poll['periodDays'] = None
@@ -62,7 +59,7 @@ class Polls():
         return result_list
 
     @staticmethod
-    def is_meeting_periodic(poll_id):
+    def get_periodic_meeting(poll_id):
         result_poll = None
         if PeriodicEventPolls.objects.filter(event_poll_id = poll_id).exists():
             result_poll = PeriodicEventPolls.objects.filter(event_poll_id = poll_id).values_list('start_date', 'end_date', 'period')[0]
@@ -97,8 +94,6 @@ class Polls():
         for i in range(participated_polls_query_set.count()):
             if participated_polls_query_set[i]['event_poll__is_finalized'] == True:
                 finalized_option = Option.get_light_weight_options(participated_polls_query_set[i]['event_poll__finalized_option_id'])
-                print(participated_polls_query_set[i]['event_poll__finalized_option_id'])
-                print(finalized_option)
                 poll = participated_polls_query_set[i]
                 poll['finalizedOption'] = finalized_option
                 del poll['event_poll__finalized_option_id']
@@ -127,7 +122,7 @@ class Polls():
     @staticmethod
     def create_options(event_poll, options, participants):
         for option in options:
-            new_option = Options(label= option["label"], date_time= option["datetime"], event_poll= event_poll)
+            new_option = Options(label= option["label"], startDate= option["time"]['startDate'], endDate= option["time"]["endDate"], event_poll= event_poll)
 
             new_option.save()
             Polls.create_participants_votes(event_poll, new_option, participants)
@@ -148,6 +143,5 @@ class Polls():
         poll.save()
 
         email_list = ParticipantsVotes.objects.filter(event_poll = poll).values_list("user__email", flat = True)
-        print(email_list)
         EmailService.send_email_to_users('fin', 'fin', email_list)
         return {"ok":True}
