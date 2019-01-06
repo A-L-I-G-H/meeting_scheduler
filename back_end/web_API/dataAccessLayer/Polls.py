@@ -112,11 +112,12 @@ class Polls():
 
         new_poll = EventPolls(creator = user, is_finalized= False, title= request_body['poll']['title'], description= request_body['poll']['description'])
         new_poll.save()
+        
 
         EmailService.send_email_to_these_usernames('new', 'new', request_body['poll']['participants'])
 
         Polls.create_options(new_poll, request_body['poll']['options'], request_body['poll']['participants'])
-        return {"ok":True}
+        return {"ok":True,"id":new_poll.id}
 
 
     @staticmethod
