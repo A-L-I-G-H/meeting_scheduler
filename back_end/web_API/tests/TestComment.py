@@ -32,7 +32,7 @@ class TestComment(TestCase):
 
     def test_add_comment(self):
         id = Comment.add_comment(self.fields)
-        comments = Comment.get_comments(1)
+        comments = Comment.get_comments(self.new_option)
         comment = [c for c in comments if c['id'] == id]
         self.assertEqual(comment[0]['text'], 'hi')
 

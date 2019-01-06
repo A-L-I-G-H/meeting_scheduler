@@ -28,7 +28,9 @@ class TestFinalizeAndReopen(TestCase):
         Polls.finalize(self.new_poll.id, self.new_option.id, self.new_user.username)
         fields = {}
         fields['pollId'] = self.new_poll.id
+        fields['notificationMessage'] = "new notification message"
         Polls.reopen_poll(fields)
+        print(EventPolls.objects.filter(id= self.new_poll.id).values("is_finalized")[0]['is_finalized'])
 
         self.assertEqual(EventPolls.objects.filter(id= self.new_poll.id).values("is_finalized")[0]['is_finalized'], False)
 
