@@ -4,7 +4,8 @@ from django.contrib import admin
 class Options(models.Model):
     event_poll = models.ForeignKey('EventPolls', on_delete = models.CASCADE)
     label = models.CharField(max_length = 100)
-    date_time = models.DateTimeField(null= True, blank= True)
+    startDate = models.DateTimeField(null= True, blank= True)
+    endDate = models.DateTimeField(null= True, blank= True)
 
 
     class Meta:
